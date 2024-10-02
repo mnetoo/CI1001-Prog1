@@ -130,7 +130,7 @@ void imprime_r(struct racional r)
     // Verifica se o racional é inválido (denominador 0 ou estrutura inválida)
     if (!valido_r(r) || r.den == 0)
     {
-        printf("NaN");
+        printf(" NaN");
         return;
     }
 
@@ -140,14 +140,14 @@ void imprime_r(struct racional r)
     // Caso o numerador seja 0, imprime apenas "0"
     if (r.num == 0)
     {
-        printf("0");
+        printf(" 0");
         return;
     }
 
     // Caso o denominador seja 1, imprime apenas o numerador
     if (r.den == 1)
     {
-        printf("%ld", r.num);
+        printf(" %ld", r.num);
         return;
     }
 
@@ -168,19 +168,19 @@ void imprime_r(struct racional r)
     // Se o numerador for positivo e o denominador negativo, imprime o racional negativo
     if (r.num > 0 && r.den < 0)
     {
-        printf("-%ld/%ld", r.num, -r.den);
+        printf(" -%ld/%ld", r.num, -r.den);
         return;
     }
 
     // Se o numerador for negativo e o denominador positivo, imprime normalmente
     if (r.num < 0 && r.den > 0)
     {
-        printf("%ld/%ld", r.num, r.den);
+        printf(" %ld/%ld", r.num, r.den);
         return;
     }
 
     // Caso geral, imprime "num/den"
-    printf("%ld/%ld", r.num, r.den);
+    printf(" %ld/%ld", r.num, r.den);
 }
 
 
