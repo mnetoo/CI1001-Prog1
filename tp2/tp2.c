@@ -16,9 +16,21 @@ int main()
         scanf("%d", &n);
     } while (n <= 0 || n >= 100);
 
+
+
+
+
+
     // Preenche o vetor com n números racionais lidos da entrada
     for (int i = 0; i < n; i++) 
-        scanf("%ld/%ld", &vetor[i].num, &vetor[i].den);
+    {
+        long num, den;
+        scanf("%ld %ld", &num, &den);
+        vetor[i] = cria_r(num, den);
+    }
+
+
+
 
     // Imprime os números racionais do vetor
     printf("VETOR = ");
@@ -26,5 +38,9 @@ int main()
         imprime_r(vetor[i]);  // Passa o racional do vetor diretamente para a função
     printf("\n");
     
+
+
+
+
     return 0;
 }
