@@ -1,18 +1,44 @@
-/* 
- * Tipos Abstratos de Dados - TADs
- * Arquivo do programa principal, que usa o TAD racional.
- * Feito em 24/09/2024 para a disciplina CI1001 - Programação 1.
-*/
-
-/* coloque aqui seus includes (primeiro os <...>, depois os "...") */
 #include <stdio.h>
+#include "racional.h"
 
-/* coloque aqui as funções auxiliares que precisar neste arquivo */
+#define TAM 100
 
-/* programa principal */
-int main ()
+int main()
 {
-  /* a completar! */
+  int n;
+  struct racional r1, r2;
+  struct racional r_soma;
+  struct racional vetor[TAM];
 
-  return (0) ;
+
+  /* Realiza a leitura ate o valor de "n" estar no intervalo [1, 99] */
+  do
+  {
+    scanf("%d", &n);
+  } while (n <= 0 || n >= 100);
+
+
+  /* Preenche o vetor com os valores de entrada */
+  for(int i = 0; i < n; i++)
+  {
+    scanf("%ld/%ld", r1.num, r1.den);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  return (0);
 }

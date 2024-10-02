@@ -1,40 +1,25 @@
-/* 
- * Tipos Abstratos de Dados - TADs
- * Arquivo de implementação para TAD racional.
- * Feito em 20/09/2024 para a disciplina CI1001 - Programação 1.
- *
- * Este arquivo deve conter as implementações das funções cujos protótipos
- * foram definidos em racional.h. Neste arquivo também podem ser definidas
- * funções auxiliares para facilitar a implementação daquelas funções.
-*/
-
-/* coloque aqui seus includes (primeiro os <...>, depois os "...") */
 #include <stdio.h>
+#include "racional.h"
 
-/*
- * Implemente aqui as funcoes definidas no racionais.h; caso precise,
- * pode definir aqui funcoes auxiliares adicionais, que devem ser usadas
- * somente neste arquivo.
-*/
 
-/* retorna um número aleatório entre min e max, inclusive. */
-long aleat (long min, long max)
+long aleat(long min, long max) 
 {
-  /* implemente aqui */
+    return min + rand() % (max - min + 1);
 }
 
-/* Máximo Divisor Comum entre a e b      */
-/* calcula o MDC pelo método de Euclides */
+/* Máximo Divisor Comum entre a e b */
 long mdc (long a, long b)
 {
-  /* implemente aqui */
+  if (b == 0)
+    return a;
+
+  return mdc(b, a % b);
 }
 
 /* Mínimo Múltiplo Comum entre a e b */
-/* mmc = (a * b) / mdc (a, b)        */
 long mmc (long a, long b)
-{
-  /* implemente aqui */
+{   
+  return (a * b) / mdc(a, b);
 }
 
 /* Recebe um número racional e o simplifica.
@@ -44,7 +29,71 @@ long mmc (long a, long b)
  * Se r for inválido, devolve-o sem simplificar. */
 struct racional simplifica_r (struct racional r)
 {
-  /* implemente aqui */
+  int divisor;
+
+  if (r.den == 0) return r;
+
+  divisor = mdc(r.num, r.den);
+
+  r.num /= divisor;
+  r.den /= divisor;
+
+  return r;
 }
 
-/* implemente as demais funções de racional.h aqui */
+/* Imprime um racional */
+void imprime_r(struct racional r)
+{
+  if (!valido_r(r)) // Se o racional for inválido, imprime INVALIDO
+  {        
+    printf(" INVALIDO");
+    return;
+  }
+  
+  r = simplifica_r(r);
+    
+  if (r.num == 0)// Se (numerador = 0) então imprime 0
+  {
+    printf(" 0");
+    return;
+  }
+
+  if (r.den == 0) // Se (denominador = 0) então imprime invalido
+    printf(" INVALIDO");
+
+  else if (r.num == r.den) // Se (numerador = denominador) então imprime 1
+    printf(" 1");
+    
+  else if (r.den == 1) // Se (denominador = 1) então imprime o numerador
+    printf(" %ld", r.num);
+    
+  else if (r.num > 0 && r.den < 0) // Se (denominador < 0) então imprime -numerador/denominador
+    printf(" -%ld/%ld", r.num, (r.den * -1));
+
+  else if (r.num < 0 && r.den < 0) // Se (numerador < 0 && denominador < 0) então imprime racional positivo
+    printf(" %ld/%ld", (r.num * -1), (r.den * -1)); 
+
+  else // Imprime o racional normalmente
+    printf(" %ld/%ld ", r.num, r.den);
+}
+
+/* Retorna a soma dos racionais r1 e r2. */
+struct racional soma_r(struct racional r1, struct racional r2)
+{ 
+  struct racional r;
+
+  if (!valido_r(r1) || !valido_r(r2)) /* Verifica se r1 ou r2 são inválidos */
+    return cria_r(0, 0);
+
+  long denominador_comum = mmc(r1.den, r2.den); /* Calcula o mmc dos denominadores */
+
+  /* Ajusta os numeradores com base no denominador comum */
+  long numerador1 = r1.num * (denominador_comum / r1.den);    
+  long numerador2 = r2.num * (denominador_comum / r2.den);
+
+  /* Soma os numeradores */
+  r.num = numerador1 + numerador2;
+  r.den = denominador_comum;
+
+  return simplifica_r(r);
+}
