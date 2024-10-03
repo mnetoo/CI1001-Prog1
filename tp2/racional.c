@@ -204,7 +204,7 @@ int multiplica_r(struct racional r1, struct racional r2, struct racional *r3)
 /* Retorna a divisão dos racionais r1 e r2 e armazena o resultado em r3 */
 int divide_r(struct racional r1, struct racional r2, struct racional *r3)
 {
-  if (!valido_r(r1) || !valido_r(r2) || r2.num == 0) /* Verifica se r1 é inválido ou se o numerador de r2 é zero */
+  if (!valido_r(r1) || !valido_r(r2) || r2.num == 0) // Verifica se r1 é inválido ou se o numerador de r2 é zero 
     return 0;                                        // Retorna 0 indicando erro (não pode dividir por zero)
 
   /* Multiplica o primeiro racional pelo inverso do segundo e armazena em r3 */
