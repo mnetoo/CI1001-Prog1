@@ -3,14 +3,14 @@
 #include "racional.h"
 
 
-
-/* Ordenação usando Bubble Sort */
 void ordena_racionais(struct racional vetor[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
+    int i, j;
+    struct racional temp;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
             if (compara_r(vetor[j], vetor[j + 1]) > 0) {
-                // Troca os elementos
-                struct racional temp = vetor[j];
+                // Troca os elementos se eles estiverem fora de ordem
+                temp = vetor[j];
                 vetor[j] = vetor[j + 1];
                 vetor[j + 1] = temp;
             }
