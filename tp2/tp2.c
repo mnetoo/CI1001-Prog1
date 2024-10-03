@@ -32,6 +32,12 @@ int main()
 
 
 
+
+
+
+
+
+
 /*-------------------CARREGANDO O VETOR---------------------------------*/
 
     // Preenche o vetor com n números racionais lidos da entrada
@@ -44,6 +50,11 @@ int main()
 
 
 
+
+
+
+
+
 /*----------IMPRIMINDO O VETOR E O CONTEÚDO DO VETOR LIDO----------*/
 
     // Imprime os números racionais do vetor
@@ -52,6 +63,34 @@ int main()
         imprime_r(vetor[i]);
     printf("\n");
     
+
+
+
+
+
+
+    // Retira os elementos inválido do vetor
+    int i = 0;
+    while (i < n) 
+    {
+        if (!valido_r(vetor[i])) 
+        {
+            // Desloca os elementos à esquerda para sobrescrever o inválido
+            for (int j = i; j < n - 1; j++)
+                vetor[j] = vetor[j + 1];
+
+            n--; // Reduz o tamanho do vetor
+        } 
+        else 
+            i++; // Avança para a próxima posição apenas se o atual for válido
+    }
+
+
+    // Imprime os números racionais válidos do vetor
+    printf("VETOR = ");
+    for (int i = 0; i < n; i++)
+        imprime_r(vetor[i]);
+    printf("\n");
 
 
 /*----------IMPRIMINDO O VETOR SEM OS ELEMENTOS INVÁLIDOS----------*/
