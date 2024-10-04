@@ -54,7 +54,7 @@ int main()
     {
         if (!valido_r(vetor[i])) 
         {
-            for (int j = i; j < n - 1; j++) // Desloca os elementos à esquerda para para sobrescrever o inválido
+            for (int j = i; j < n - 1; j++)
                 vetor[j] = vetor[j + 1];          
 
             n--;
