@@ -69,7 +69,6 @@ int main()
         imprime_r(vetor[i]);
     printf("\n");
 
-    // Ordena o vetor de racionais válidos
     ordena_racionais(vetor, n);
 
     // Imprime o vetor com os números racionais ordenados
