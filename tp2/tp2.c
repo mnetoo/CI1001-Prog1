@@ -1,3 +1,12 @@
+/* 
+
+    Este arquivo contém o main com a implementação do trabalho para definir e manipular números racionais.
+    Utiliza as funções do arquivo "racional.c" que contém a implementação das funções que foram prototipadas
+    em um arquivo header "racional.h"
+
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "racional.h"
