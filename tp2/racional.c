@@ -1,3 +1,11 @@
+/* 
+
+  Este arquivo contém as implementações das funções utilizadas
+  para definir e manipular números racionais.
+  Utiliza os protótipos definidos no arquivo header "racionais.h"
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "racional.h"
