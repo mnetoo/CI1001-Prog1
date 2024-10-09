@@ -1,7 +1,9 @@
 /* 
- * Tipos Abstratos de Dados - TADs
- * Arquivo do programa principal, que usa o TAD racional.
- * Feito em 24/09/2024 para a disciplina CI1001 - Programação 1.
+
+    Este arquivo contém o main com a implementação do trabalho para definir e manipular números racionais.
+    Utiliza as funções do arquivo "racional.c" que contém a implementação das funções que foram prototipadas
+    em um arquivo header "racional.h"
+
 */
 
 
@@ -11,23 +13,44 @@
 
 
 
-/* Função que ordena vetor de ponteiros em ordem crescente */
-void ordena_racional(struct racional *vetor[], int contador_valido) 
-{
-    for (int i = 0; i < contador_valido - 1; i++) 
-    {
-        for (int j = 0; j < contador_valido - 1 - i; j++) 
-        {
-            // Usando a função compara_r para comparar os racionais
-            if (compara_r(vetor[j], vetor[j + 1]) > 0) 
-            {
-                // Fazendo a troca dos ponteiros se o anterior for maior que o próximo
-                struct racional *temp = vetor[j];
-                vetor[j] = vetor[j + 1];
-                vetor[j + 1] = temp;
-            }
+// Função para trocar dois ponteiros de racionais
+void troca(struct racional **a, struct racional **b) {
+    struct racional *temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Função para particionar o vetor
+int particiona_racional(struct racional *vetor[], int esquerda, int direita) {
+    struct racional *pivo = vetor[direita]; // Escolhe o último elemento como pivô
+    int i = (esquerda - 1);  // Índice do menor elemento
+
+    for (int j = esquerda; j < direita; j++) {
+        // Usando a função compara_r para comparar os racionais
+        if (compara_r(vetor[j], pivo) <= 0) {
+            i++;  // Incrementa o índice do menor elemento
+            troca(&vetor[i], &vetor[j]);
         }
     }
+    troca(&vetor[i + 1], &vetor[direita]);
+    return (i + 1);  // Retorna o índice de particionamento
+}
+
+// Função recursiva de Quick Sort
+void quicksort_racional(struct racional *vetor[], int esquerda, int direita) {
+    if (esquerda < direita) {
+        // Particiona o vetor e encontra o índice do pivô
+        int pivo = particiona_racional(vetor, esquerda, direita);
+
+        // Ordena as duas metades recursivamente
+        quicksort_racional(vetor, esquerda, pivo - 1);
+        quicksort_racional(vetor, pivo + 1, direita);
+    }
+}
+
+// Função que ordena vetor de ponteiros de racionais usando Quick Sort
+void ordena_racional(struct racional *vetor[], int contador_valido) {
+    quicksort_racional(vetor, 0, contador_valido - 1);
 }
 
 
@@ -134,4 +157,3 @@ int main ()
 
     return 0;
 }
-
