@@ -96,8 +96,15 @@ struct racional *cria_r(long numerador, long denominador)
 /* Libera a memória alocada para o racional apontado por r */
 void destroi_r(struct racional *r) 
 {
-    if (r != NULL)
-        free(r); // Libera a memória alocada para o número racional
+    if (r != NULL) {
+        // Se houver membros alocados dinamicamente dentro de r, libere-os aqui
+        // Exemplo: se r->num ou r->den foram alocados dinamicamente
+        // free(r->num);
+        // free(r->den);
+
+        free(r);  // Libera a memória alocada para o número racional
+        r = NULL; // Evita ponteiros "pendurados" (dangling pointers)
+    }
 }
 
 
@@ -134,14 +141,14 @@ void imprime_r(struct racional *r)
 {
     if (r == NULL) 
     {
-        printf("NULL");
+        printf(" NULL");
         return;
     }
     
 
     if (!valido_r(r)) 
     {
-        printf("NaN");
+        printf(" NaN");
         return;
     }
 
@@ -149,17 +156,17 @@ void imprime_r(struct racional *r)
     // Se o numerador for 0, imprime "0"
     if (r->num == 0) 
     {
-        printf("0");
+        printf(" 0");
     } 
 
     // Se o denominador for 1, imprime somente o numerador
     else if (r->den == 1) 
-        printf("%ld", r->num);
+        printf(" %ld", r->num);
 
 
     // Se o numerador e o denominador forem iguais, imprime "1"
     else if (r->num == r->den) 
-        printf("1");
+        printf(" 1");
   
 
     // Formato padrão "num/den"
@@ -167,9 +174,9 @@ void imprime_r(struct racional *r)
     {
         // Imprime o sinal negativo se o numerador for negativo
         if (r->num < 0 || r->den < 0)
-            printf("%ld/%ld", -abs(r->num), abs(r->den));
+            printf(" %ld/%ld", -labs(r->num), labs(r->den));
         else
-            printf("%ld/%ld", r->num, r->den);
+            printf(" %ld/%ld", r->num, r->den);
     }
 }
 
