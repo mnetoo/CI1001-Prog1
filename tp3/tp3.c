@@ -65,6 +65,7 @@ int main()
     printf("VETOR =");
     for (int i = 0; i < n; i++)
         imprime_r(vetor[i]);
+    printf(" ");
     printf("\n");
 
     // Eliminando racionais inválidos
@@ -81,6 +82,7 @@ int main()
     printf("VETOR =");
     for (int i = 0; i < contador_valido; i++)
         imprime_r(vetor[i]);
+    printf(" ");
     printf("\n");
 
     // Ordena vetor de racionais
@@ -90,6 +92,7 @@ int main()
     printf("VETOR =");
     for (int i = 0; i < contador_valido; i++)
         imprime_r(vetor[i]);
+    printf(" ");
     printf("\n");
 
     // Calculando a soma
@@ -118,15 +121,16 @@ int main()
         else
             imprime_r(vetor[i]); // Imprime o racional se o ponteiro não é NULL
     }
+    printf(" ");
     printf("\n");
 
     // Liberando o vetor de ponteiros
     free(vetor);
-    vetor = NULL; // Evita ponteiros "pendurados"
+    vetor = NULL;
 
     // Liberando a soma
     destroi_r(soma);
-    soma = NULL; // Define o ponteiro como NULL após liberar
+    soma = NULL;
 
     return 0;
 }
