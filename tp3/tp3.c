@@ -1,8 +1,8 @@
 /*
 
-Este arquivo contém as implementações das funções utilizadas
-para definir e manipular números racionais.
-Utiliza os protótipos definidos no arquivo header "racional.h"
+    Este arquivo contém o main com a implementação do trabalho para definir e manipular números racionais.
+    Utiliza as funções do arquivo "racional.c" que contém a implementação das funções que foram prototipadas
+    em um arquivo header "racional.h"
 
 */
 
@@ -10,198 +10,127 @@ Utiliza os protótipos definidos no arquivo header "racional.h"
 #include <stdlib.h>
 #include "racional.h"
 
-/* Máximo Divisor Comum entre a e b */
-long mdc(long a, long b)
+// Função para trocar dois ponteiros de racionais
+void troca(struct racional **a, struct racional **b)
 {
-    if (b == 0)
-        return a;
-
-    return mdc(b, a % b);
+    struct racional *temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-/* Mínimo Múltiplo Comum entre a e b */
-long mmc(long a, long b)
+// Função que ordena vetor de ponteiros de racionais usando Selection Sort
+void ordena_racional(struct racional *vetor[], int contador_valido)
 {
-    return (a * b) / mdc(a, b);
-}
-
-/* Simplifica o número racional indicado no parâmetro */
-int simplifica_r(struct racional *r)
-{
-    if (r == NULL || r->den == 0)
-        return 0; // Retorna 0 em caso de erro: ponteiro nulo ou denominador zero
-
-    int divisor = mdc(r->num, r->den);
-
-    r->num /= divisor;
-    r->den /= divisor;
-
-    // Se o denominador for negativo, ajusta os sinais
-    if (r->den < 0)
+    for (int i = 0; i < contador_valido - 1; i++)
     {
-        r->num = -r->num;
-        r->den = -r->den;
-    }
+        int min = i;
+        for (int j = i + 1; j < contador_valido; j++)
+            if (compara_r(vetor[j], vetor[min]) < 0)
+                min = j;
 
-    return 1; // Retorna 1 em sucesso
-}
-
-/* Cria um número racional com o numerador e denominador indicados e retorna um ponteiro que aponta para ele.*/
-struct racional *cria_r(long numerador, long denominador)
-{
-    // Aloca memória para um novo número racional
-    struct racional *r = malloc(sizeof(struct racional));
-
-    // Verifica se a alocação foi bem-sucedida
-    if (r == NULL)
-        return NULL; // Retorna NULL se não conseguiu alocar memória
-
-    r->num = numerador;
-    r->den = denominador;
-
-    simplifica_r(r);
-
-    return r;
-}
-
-/* Libera a memória alocada para o racional apontado por r */
-void destroi_r(struct racional *r)
-{
-    if (r != NULL)
-    {
-        free(r);  // Libera a memória alocada para o número racional
-        r = NULL; // Evita ponteiros "pendurados"
+        // Troca o menor elemento encontrado com o primeiro elemento do subvetor não ordenado
+        if (min != i)
+            troca(&vetor[i], &vetor[min]);
     }
 }
 
-/* Retorna 1 se o racional r for válido ou 0 se for inválido */
-int valido_r(struct racional *r)
+/* PROGRAMA PRINCIPAL */
+int main()
 {
-    if (r == NULL)
-        return 0;
+    int n;
 
-    return (r->den != 0); // Retorna 1 se o denominador não for zero, caso contrário retorna 0
-}
-
-/* Imprime um racional r */
-void imprime_r(struct racional *r)
-{
-    if (r == NULL)
+    // Leitura do valor n até estar no intervalo [1, 99]
+    do
     {
-        printf(" NULL");
-        return;
+        scanf("%d", &n);
+    } while (n <= 0 || n >= 100);
+
+    // Alocação do vetor de ponteiros para racionais
+    struct racional **vetor = malloc(n * sizeof(struct racional *));
+    if (vetor == NULL)
+    {
+        printf("Erro ao alocar memória.\n");
+        return 1;
     }
 
-    if (!valido_r(r))
+    // Carregando vetor com números racionais
+    for (int i = 0; i < n; i++)
     {
-        printf(" NaN");
-        return;
+        long num, den;
+        scanf("%ld %ld", &num, &den);
+        vetor[i] = cria_r(num, den);
     }
 
-    if (r->num == 0) // Se o numerador for 0, imprime "0"
-        printf(" 0");
+    // Imprimindo o vetor
+    printf("VETOR =");
+    for (int i = 0; i < n; i++)
+        imprime_r(vetor[i]);
+    printf(" ");
+    printf("\n");
 
-    else if (r->den == 1) // Se o denominador for 1, imprime somente o numerador
-        printf(" %ld", r->num);
-
-    else if (r->num == r->den) // Se o numerador e o denominador forem iguais, imprime "1"
-        printf(" 1");
-
-    else // Formato padrão "num/den"
+    // Eliminando racionais inválidos
+    int contador_valido = 0;
+    for (int i = 0; i < n; i++)
     {
-        if (r->num < 0 || r->den < 0) // Imprime o sinal negativo se o numerador for negativo
-            printf(" %ld/%ld", -labs(r->num), labs(r->den));
+        if (valido_r(vetor[i]))
+            vetor[contador_valido++] = vetor[i];
         else
-            printf(" %ld/%ld", r->num, r->den);
+            destroi_r(vetor[i]); // Libera memória dos racionais inválidos
     }
-}
 
-/* Compara dois números racionais r1 e r2 */
-int compara_r(struct racional *r1, struct racional *r2)
-{
-    if (r1 == NULL || r2 == NULL)
-        return -2; // Retorna -2 se algum ponteiro for nulo
+    // Imprimindo o vetor resultante
+    printf("VETOR =");
+    for (int i = 0; i < contador_valido; i++)
+        imprime_r(vetor[i]);
+    printf(" ");
+    printf("\n");
 
-    if (!valido_r(r1) || !valido_r(r2))
-        return -2; // Retorna -2 se algum racional não for válido
+    // Ordena vetor de racionais
+    ordena_racional(vetor, contador_valido);
 
-    long denominador_mmc = mmc(r1->den, r2->den);
+    // Imprimindo o vetor ordenado
+    printf("VETOR =");
+    for (int i = 0; i < contador_valido; i++)
+        imprime_r(vetor[i]);
+    printf(" ");
+    printf("\n");
 
-    long numerador1 = r1->num * (denominador_mmc / r1->den);
-    long numerador2 = r2->num * (denominador_mmc / r2->den);
+    // Calculando a soma
+    struct racional *soma = cria_r(0, 1); // Inicializa soma como 0
+    for (int i = 0; i < contador_valido; i++)
+        soma_r(soma, vetor[i], soma);
 
-    if (numerador1 < numerador2)
-        return -1; // r1 é menor que r2
+    // Imprimindo a soma
+    printf("SOMA =");
+    imprime_r(soma);
+    printf("\n");
 
-    if (numerador1 > numerador2)
-        return 1; // r1 é maior que r2
+    // Liberando a memória dos racionais no vetor
+    for (int i = 0; i < contador_valido; i++)
+    {
+        destroi_r(vetor[i]);
+        vetor[i] = NULL; // Define o ponteiro como NULL após liberar
+    }
 
-    return 0; // r1 é igual a r2
-}
+    // Imprimindo o vetor com os ponteiros já nulos
+    printf("VETOR =");
+    for (int i = 0; i < contador_valido; i++)
+    {
+        if (vetor[i] == NULL)
+            printf(" NULL"); // Imprime "NULL" se o ponteiro foi liberado
+        else
+            imprime_r(vetor[i]); // Imprime o racional se o ponteiro não é NULL
+    }
+    printf(" ");
+    printf("\n");
 
-/* Coloca em *r3 a soma simplificada dos racionais *r1 e *r2 */
-int soma_r(struct racional *r1, struct racional *r2, struct racional *r3)
-{
-    if (r1 == NULL || r2 == NULL || r3 == NULL || !valido_r(r1) || !valido_r(r2))
-        return 0; // Retorna 0 indicando erro
+    // Liberando o vetor de ponteiros
+    free(vetor);
+    vetor = NULL;
 
-    long denominador_comum = mmc(r1->den, r2->den);
+    // Liberando a soma
+    destroi_r(soma);
+    soma = NULL;
 
-    long numerador1 = r1->num * (denominador_comum / r1->den);
-    long numerador2 = r2->num * (denominador_comum / r2->den);
-
-    r3->num = numerador1 + numerador2;
-    r3->den = denominador_comum;
-
-    simplifica_r(r3);
-
-    return 1;
-}
-
-/* Coloca em *r3 a diferença simplificada dos racionais *r1 e *r2 */
-int subtrai_r(struct racional *r1, struct racional *r2, struct racional *r3)
-{
-
-    if (r1 == NULL || r2 == NULL || r3 == NULL || !valido_r(r1) || !valido_r(r2))
-        return 0; // Retorna 0 indicando erro
-
-    long denominador_comum = mmc(r1->den, r2->den);
-
-    long numerador1 = r1->num * (denominador_comum / r1->den);
-    long numerador2 = r2->num * (denominador_comum / r2->den);
-
-    r3->num = numerador1 - numerador2;
-    r3->den = denominador_comum;
-
-    simplifica_r(r3);
-
-    return 1;
-}
-
-/* Coloca em *r3 o produto simplificado dos racionais *r1 e *r2 */
-int multiplica_r(struct racional *r1, struct racional *r2, struct racional *r3)
-{
-    if (r1 == NULL || r2 == NULL || r3 == NULL || !valido_r(r1) || !valido_r(r2))
-        return 0; // Retorna 0 indicando erro
-
-    r3->num = r1->num * r2->num;
-    r3->den = r1->den * r2->den;
-
-    simplifica_r(r3);
-
-    return 1;
-}
-
-/* Coloca em *r3 a divisão simplificada do racional *r1 por *r2 */
-int divide_r(struct racional *r1, struct racional *r2, struct racional *r3)
-{
-    if (r1 == NULL || r2 == NULL || r3 == NULL || !valido_r(r1) || !valido_r(r2) || r2->num == 0)
-        return 0; // Retorna 0 indicando erro
-
-    r3->num = r1->num * r2->den;
-    r3->den = r1->den * r2->num;
-
-    simplifica_r(r3);
-
-    return 1;
+    return 0;
 }
