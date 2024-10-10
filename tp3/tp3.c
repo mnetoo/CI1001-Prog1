@@ -19,12 +19,12 @@ void troca(struct racional **a, struct racional **b)
 }
 
 // Função que ordena vetor de ponteiros de racionais usando Selection Sort
-void ordena_racional(struct racional *vetor[], int contador_valido)
+void ordena_racional(struct racional *vetor[], int n)
 {
-    for (int i = 0; i < contador_valido - 1; i++)
+    for (int i = 0; i < n - 1; i++)
     {
         int min = i;
-        for (int j = i + 1; j < contador_valido; j++)
+        for (int j = i + 1; j < n; j++)
             if (compara_r(vetor[j], vetor[min]) < 0)
                 min = j;
 
@@ -68,36 +68,40 @@ int main()
     printf(" ");
     printf("\n");
 
-    // Eliminando racionais inválidos
-    int contador_valido = 0;
-    for (int i = 0; i < n; i++)
+    // Elimina os racionais inválidos
+    int novo_tamanho = n;
+    for (int i = 0; i < novo_tamanho; i++) 
     {
-        if (valido_r(vetor[i]))
-            vetor[contador_valido++] = vetor[i];
-        else
-            destroi_r(vetor[i]); // Libera memória dos racionais inválidos
+        if (!valido_r(vetor[i])) 
+        {
+            destroi_r(vetor[i]); // Libera a memória do racional inválido
+            vetor[i] = vetor[novo_tamanho - 1]; // Substitui o inválido pelo último elemento válido
+            novo_tamanho--; // Reduz o tamanho do vetor
+            i--; // Reavalia a posição atual após a substituição
+        }
     }
+    n = novo_tamanho;
 
     // Imprimindo o vetor resultante
     printf("VETOR =");
-    for (int i = 0; i < contador_valido; i++)
+    for (int i = 0; i < n; i++)
         imprime_r(vetor[i]);
     printf(" ");
     printf("\n");
 
     // Ordena vetor de racionais
-    ordena_racional(vetor, contador_valido);
+    ordena_racional(vetor, n);
 
     // Imprimindo o vetor ordenado
     printf("VETOR =");
-    for (int i = 0; i < contador_valido; i++)
+    for (int i = 0; i < n; i++)
         imprime_r(vetor[i]);
     printf(" ");
     printf("\n");
 
     // Calculando a soma
     struct racional *soma = cria_r(0, 1); // Inicializa soma como 0
-    for (int i = 0; i < contador_valido; i++)
+    for (int i = 0; i < n; i++)
         soma_r(soma, vetor[i], soma);
 
     // Imprimindo a soma
@@ -106,7 +110,7 @@ int main()
     printf("\n");
 
     // Liberando a memória dos racionais no vetor
-    for (int i = 0; i < contador_valido; i++)
+    for (int i = 0; i < n; i++)
     {
         destroi_r(vetor[i]);
         vetor[i] = NULL; // Define o ponteiro como NULL após liberar
@@ -114,7 +118,7 @@ int main()
 
     // Imprimindo o vetor com os ponteiros já nulos
     printf("VETOR =");
-    for (int i = 0; i < contador_valido; i++)
+    for (int i = 0; i < n; i++)
     {
         if (vetor[i] == NULL)
             printf(" NULL"); // Imprime "NULL" se o ponteiro foi liberado
