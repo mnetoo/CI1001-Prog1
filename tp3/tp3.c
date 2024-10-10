@@ -62,7 +62,7 @@ int main()
     }
 
     // Imprimindo o vetor
-    printf("VETOR = ");
+    printf("VETOR =");
     for (int i = 0; i < n; i++)
         imprime_r(vetor[i]);
     printf("\n");
@@ -78,7 +78,7 @@ int main()
     }
 
     // Imprimindo o vetor resultante
-    printf("VETOR = ");
+    printf("VETOR =");
     for (int i = 0; i < contador_valido; i++)
         imprime_r(vetor[i]);
     printf("\n");
@@ -87,7 +87,7 @@ int main()
     ordena_racional(vetor, contador_valido);
 
     // Imprimindo o vetor ordenado
-    printf("VETOR = ");
+    printf("VETOR =");
     for (int i = 0; i < contador_valido; i++)
         imprime_r(vetor[i]);
     printf("\n");
@@ -98,7 +98,7 @@ int main()
         soma_r(soma, vetor[i], soma);
 
     // Imprimindo a soma
-    printf("SOMA = ");
+    printf("SOMA =");
     imprime_r(soma);
     printf("\n");
 
@@ -110,11 +110,11 @@ int main()
     }
 
     // Imprimindo o vetor com os ponteiros já nulos
-    printf("VETOR = ");
+    printf("VETOR =");
     for (int i = 0; i < contador_valido; i++)
     {
         if (vetor[i] == NULL)
-            printf("NULL "); // Imprime "NULL" se o ponteiro foi liberado
+            printf(" NULL"); // Imprime "NULL" se o ponteiro foi liberado
         else
             imprime_r(vetor[i]); // Imprime o racional se o ponteiro não é NULL
     }
