@@ -34,6 +34,54 @@ void ordena_racional(struct racional *vetor[], int n)
     }
 }
 
+void imprime_vetor( int n, struct racional **vetor)
+{
+    if (n == 0)
+        printf("VETOR = ");
+    else
+    {
+        printf("VETOR =");
+        for (int i = 0; i < n; i++)
+            imprime_r(vetor[i]);
+    }
+
+}
+
+void soma_vetor (int n,  struct racional **vetor)
+{
+    struct racional *soma = cria_r(0, 1);
+    struct racional result;
+
+    for (int i = 0; i < n; i++)
+    {
+        soma_r(soma, vetor[i], &result);
+        *soma = result;
+    }
+
+    printf("SOMA =");
+    imprime_r(soma);
+    printf("\n");
+
+    destroi_r(soma);
+    soma = NULL;
+
+}
+
+void elimina_invalidos(int *n, struct racional **vetor) 
+{
+     for (int k = 0; k < *n;) 
+     {
+         if (!valido_r(vetor[k])) 
+         {
+             destroi_r(vetor[k]);
+             vetor[k] = vetor[*n - 1];
+             (*n)--;
+         } 
+         else
+             k++;
+     }
+}
+
 /* PROGRAMA PRINCIPAL */
 int main()
 {
@@ -61,53 +109,19 @@ int main()
         vetor[i] = cria_r(num, den);
     }
 
-    // Imprimindo o vetor
-    printf("VETOR =");
-    for (int i = 0; i < n; i++)
-        imprime_r(vetor[i]);
-    printf(" ");
+    imprime_vetor(n, vetor);
     printf("\n");
 
-    // Elimina os racionais inválidos
-    int novo_tamanho = n;
-    for (int i = 0; i < novo_tamanho; i++) 
-    {
-        if (!valido_r(vetor[i])) 
-        {
-            destroi_r(vetor[i]); // Libera a memória do racional inválido
-            vetor[i] = vetor[novo_tamanho - 1]; // Substitui o inválido pelo último elemento válido
-            novo_tamanho--; // Reduz o tamanho do vetor
-            i--; // Reavalia a posição atual após a substituição
-        }
-    }
-    n = novo_tamanho;
-
-    // Imprimindo o vetor resultante
-    printf("VETOR =");
-    for (int i = 0; i < n; i++)
-        imprime_r(vetor[i]);
-    printf(" ");
+    elimina_invalidos(&n, vetor);
+    imprime_vetor(n, vetor);
     printf("\n");
 
     // Ordena vetor de racionais
     ordena_racional(vetor, n);
-
-    // Imprimindo o vetor ordenado
-    printf("VETOR =");
-    for (int i = 0; i < n; i++)
-        imprime_r(vetor[i]);
-    printf(" ");
+    imprime_vetor(n, vetor);
     printf("\n");
 
-    // Calculando a soma
-    struct racional *soma = cria_r(0, 1); // Inicializa soma como 0
-    for (int i = 0; i < n; i++)
-        soma_r(soma, vetor[i], soma);
-
-    // Imprimindo a soma
-    printf("SOMA =");
-    imprime_r(soma);
-    printf("\n");
+    soma_vetor(n, vetor);
 
     // Liberando a memória dos racionais no vetor
     for (int i = 0; i < n; i++)
@@ -116,25 +130,12 @@ int main()
         vetor[i] = NULL; // Define o ponteiro como NULL após liberar
     }
 
-    // Imprimindo o vetor com os ponteiros já nulos
-    printf("VETOR =");
-    for (int i = 0; i < n; i++)
-    {
-        if (vetor[i] == NULL)
-            printf(" NULL"); // Imprime "NULL" se o ponteiro foi liberado
-        else
-            imprime_r(vetor[i]); // Imprime o racional se o ponteiro não é NULL
-    }
-    printf(" ");
+    imprime_vetor(n, vetor);
     printf("\n");
 
     // Liberando o vetor de ponteiros
     free(vetor);
     vetor = NULL;
-
-    // Liberando a soma
-    destroi_r(soma);
-    soma = NULL;
 
     return 0;
 }
