@@ -1,24 +1,31 @@
-// TAD lista de números inteiros
-// Carlos Maziero - DINF/UFPR, Out 2024
-//
-// Implementação do TAD - a completar
-//
-// Implementação com lista encadeada dupla não-circular
+/*
+
+    Implementação de Lista Dupla Encadeada (não-circular).
+    Desenvolvido para o trabalho prático 4 (TAD lista de números inteiros)
+    da disciplina de Programação I, turma do Professor David Menotti.
+
+    Este arquivo contém a implementação das funções prototipadas
+    no arquivo header "lista.h".
+
+*/
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "lista.h"
 
 
-// Cria uma lista vazia.
-// Retorno: ponteiro p/ a lista ou NULL em erro.
-struct lista_t *lista_cria ()
+
+// Cria e inicializa uma nova lista vazia.
+struct lista_t *lista_cria()
 {
     struct lista_t *lista = (struct lista_t *) malloc(sizeof(struct lista_t));
 
     if (lista == NULL)
         return NULL;
 
+    // Inicializa os membros da lista para representar uma lista vazia.
     lista->prim = NULL;
     lista->ult = NULL;
     lista->tamanho = 0;
@@ -26,33 +33,32 @@ struct lista_t *lista_cria ()
     return lista;
 }
 
+//============================================================================================================
 
-// Remove todos os itens da lista e libera a memória.
-// Retorno: NULL.
-struct lista_t *lista_destroi (struct lista_t *lst)
+// Remove todos os itens da lista e libera a memória utilizada.
+struct lista_t *lista_destroi(struct lista_t *lst)
 {
     if (lst == NULL)
         return NULL;
 
-    struct item_t*atual = lst->prim;
+    struct item_t *atual = lst->prim;
 
+    // Percorre todos os itens da lista
     while (atual != NULL)
     {
-        struct item_t * temp = atual;
-        atual = atual->prox;
-        free(temp);
+        struct item_t *temp = atual; // Armazena o item atual em uma variável temporária
+        atual = atual->prox;         // Avança para o próximo item da lista
+        free(temp);                  // Libera a memória do item atual
     }
 
-    free(lst);
+    free(lst); // Libera a memória da estrutura da lista
 
     return NULL;
 }
 
-
+//============================================================================================================
 
 // Insere o item na lista na posição indicada;
-// se a posição for além do fim da lista ou for -1, insere no fim.
-// Retorno: número de itens na lista após a operação ou -1 em erro.
 int lista_insere (struct lista_t *lst, int item, int pos)
 {
     if (lst == NULL)
@@ -66,238 +72,210 @@ int lista_insere (struct lista_t *lst, int item, int pos)
     novo->ant = NULL;
     novo->prox = NULL;
 
-    // Caso a posição seja -1 ou maior que o tamanho atual, insere no final
+    // Se posição for igual -1 ou maior que o tamanho atual, insere no final.
     if (pos < 0 || pos >= lst->tamanho)
     {
-        // Inserir no final
-        if (lst->ult != NULL) // Se a lista não está vazia
+        if (lst->ult != NULL) // Lista não vazia
         {
-            lst->ult->prox = novo; // O último item aponta para o novo item
-            novo->ant = lst->ult;  // O novo item aponta para o antigo último
-            lst->ult = novo;        // Atualiza o ponteiro do último item
+            lst->ult->prox = novo;
+            novo->ant = lst->ult;
+            lst->ult = novo;
         }
-        else // Se a lista está vazia
+        else // Lista vazia
         {
-            lst->prim = novo; // O novo item é o primeiro
-            lst->ult = novo;  // O novo item é o último
+            lst->prim = novo;
+            lst->ult = novo;
         }
     }
-    else
+    else // Inserir na posição especificada
     {
-        // Inserir na posição especificada
         struct item_t *atual = lst->prim;
 
-        // Percorre até a posição desejada
         for (int i = 0; i < pos && atual != NULL; i++)
-        {
-            atual = atual->prox; // Move para o próximo item
-        }
+            atual = atual->prox;
 
-        // Insere no início
-        if (atual == lst->prim)
+        if (atual == lst->prim) // Insere no início
         {
-            novo->prox = lst->prim; // O novo item aponta para o antigo primeiro
-            lst->prim->ant = novo;   // O antigo primeiro aponta para o novo item
-            lst->prim = novo;        // Atualiza o ponteiro do primeiro item
+            novo->prox = lst->prim;
+            lst->prim->ant = novo;
+            lst->prim = novo;
         }
         else
         {
-            // Insere no meio ou no fim
-            if (atual != NULL) // Se não for o último
-            {
-                novo->prox = atual; // O novo item aponta para o item atual
-                novo->ant = atual->ant; // O novo item aponta para o anterior do atual
-                atual->ant->prox = novo; // O item anterior do atual aponta para o novo
-                atual->ant = novo;       // O atual aponta para o novo
-            }
-            else // Se a posição é igual ao tamanho, insere no fim
-            {
-                lst->ult->prox = novo; // O último item aponta para o novo item
-                novo->ant = lst->ult;   // O novo item aponta para o último
-                lst->ult = novo;        // Atualiza o ponteiro do último item
-            }
+            novo->prox = atual;
+            novo->ant = atual->ant;
+            if (atual != NULL)
+                atual->ant->prox = novo;
+            if (atual != NULL)
+                atual->ant = novo;
         }
     }
 
-    lst->tamanho++; // Incrementa o tamanho da lista
-    return lst->tamanho; // Retorna o número de itens na lista
+    lst->tamanho++;
+    return lst->tamanho;
 }
 
-
+//============================================================================================================
 
 // Retira o item da lista da posição indicada.
-// se a posição for além do fim da lista ou for -1, retira do fim.
-// Retorno: número de itens na lista após a operação ou -1 em erro.
 int lista_retira(struct lista_t *lst, int *item, int pos)
 {
-    if (lst == NULL || item == NULL) // Verifica se a lista ou o ponteiro do item é nulo
+    if (lst == NULL || item == NULL)
         return -1;
 
-    if (lst->tamanho == 0) // Verifica se a lista está vazia
+    if (lst->tamanho == 0)
         return -1;
 
     struct item_t *atual;
 
-    // Caso a posição seja -1 ou maior ou igual ao tamanho, retira do final
+    // Se posição for igual -1 ou maior ou igual ao tamanho, retira do final.
     if (pos < 0 || pos >= lst->tamanho)
     {
-        atual = lst->ult; // Ponto para o último item
+        atual = lst->ult;
 
-        if (atual == NULL) // Verifica se o último item é nulo
+        if (atual == NULL)
             return -1;
 
-        *item = atual->valor; // Armazena o valor do item a ser retirado
+        *item = atual->valor;
 
-        if (atual->ant != NULL) // Se não for o primeiro item
+        if (atual->ant != NULL)
         {
-            lst->ult = atual->ant; // Atualiza o ponteiro do último item
-            lst->ult->prox = NULL;  // O novo último item não aponta para nenhum próximo
+            lst->ult = atual->ant;
+            lst->ult->prox = NULL;
         }
-        else // Se for o único item na lista
+        else
         {
-            lst->prim = NULL; // A lista fica vazia
-            lst->ult = NULL;  // O último também fica nulo
+            lst->prim = NULL;
+            lst->ult = NULL;
         }
     }
     else
     {
-        // Retira o item na posição especificada
         atual = lst->prim;
 
-        // Percorre até a posição desejada
         for (int i = 0; i < pos && atual != NULL; i++)
         {
-            atual = atual->prox; // Move para o próximo item
+            atual = atual->prox;
         }
 
-        if (atual == NULL) // Se não encontrou o item
+        if (atual == NULL)
             return -1;
 
-        *item = atual->valor; // Armazena o valor do item a ser retirado
+        *item = atual->valor;
 
-        // Atualiza os ponteiros do item anterior e próximo
-        if (atual->ant != NULL) // Se não for o primeiro item
+        if (atual->ant != NULL)
             atual->ant->prox = atual->prox;
-        else // Se for o primeiro item
-            lst->prim = atual->prox; // O próximo item se torna o primeiro
+        else
+            lst->prim = atual->prox;
 
-        if (atual->prox != NULL) // Se não for o último item
+        if (atual->prox != NULL)
             atual->prox->ant = atual->ant;
-        else // Se for o último item
-            lst->ult = atual->ant; // O anterior se torna o último
+        else
+            lst->ult = atual->ant;
 
-        // Libera a memória do item retirado
         free(atual);
     }
 
-    lst->tamanho--; // Decrementa o tamanho da lista
-    return lst->tamanho; // Retorna o número de itens na lista após a operação
+    lst->tamanho--;
+    return lst->tamanho;
 }
 
+//============================================================================================================
 
-
-// Informa o valor do item na posição indicada, sem retirá-lo.
-// se a posição for além do fim da lista ou for -1, consulta do fim.
-// Retorno: número de itens na lista ou -1 em erro.
+// Consulta o item na posição indicada.
 int lista_consulta(struct lista_t *lst, int *item, int pos)
 {
-    if (lst == NULL || item == NULL) // Verifica se a lista ou o ponteiro do item é nulo
+    if (lst == NULL || item == NULL)
         return -1;
 
-    if (lst->tamanho == 0) // Verifica se a lista está vazia
+    if (lst->tamanho == 0)
         return -1;
 
     struct item_t *atual;
 
-    // Caso a posição seja -1 ou maior ou igual ao tamanho, consulta o último item
-    if (pos < 0 || pos >= lst->tamanho)
+    // Se  posição for -1 ou maior que o tamanho da lista, consulta o último item.
+    if (pos == -1 || pos >= lst->tamanho)
     {
-        atual = lst->ult; // Ponto para o último item
+        atual = lst->ult;
 
-        if (atual == NULL) // Verifica se o último item é nulo
+        if (atual == NULL)
             return -1;
 
-        *item = atual->valor; // Armazena o valor do item a ser consultado
+        *item = atual->valor;
     }
     else
     {
-        // Consulta o item na posição especificada
         atual = lst->prim;
 
-        // Percorre até a posição desejada
-        for (int i = 0; i < pos && atual != NULL; i++)
+        // Percorre a lista até a posição desejada.
+        for (int i = 0; i < pos; i++)
         {
-            atual = atual->prox; // Move para o próximo item
+            if (atual == NULL)
+                return -1;
+
+            atual = atual->prox;
         }
 
-        if (atual == NULL) // Se não encontrou o item
+        if (atual == NULL)
             return -1;
 
-        *item = atual->valor; // Armazena o valor do item a ser consultado
+        *item = atual->valor;
     }
 
-    return lst->tamanho; // Retorna o número de itens na lista
+    return lst->tamanho;
 }
 
+//============================================================================================================
 
-
-// Informa a posição da 1ª ocorrência do valor indicado na lista.
-// Retorno: posição do valor ou -1 se não encontrar ou erro.
+// Procura a primeira ocorrência do valor na lista.
 int lista_procura(struct lista_t *lst, int valor)
 {
-    if (lst == NULL) // Verifica se a lista é nula
+    if (lst == NULL)
         return -1;
 
-    struct item_t *atual = lst->prim; // Ponteiro para percorrer a lista
-    int posicao = 0; // Inicializa a posição em 0
+    struct item_t *atual = lst->prim;
+    int posicao = 0;
 
-    // Percorre a lista até encontrar o valor ou até o final
+    // Percorre a lista até encontrar o valor ou até o final da lista
     while (atual != NULL)
     {
-        if (atual->valor == valor) // Verifica se o valor do item é igual ao valor procurado
-            return posicao; // Retorna a posição se o valor for encontrado
+        // Verifica se o valor do item atual é igual ao valor procurado
+        if (atual->valor == valor)
+            return posicao;
 
-        atual = atual->prox; // Move para o próximo item
-        posicao++; // Incrementa a posição
+        atual = atual->prox;
+        posicao++;
     }
 
-    return -1; // Retorna -1 se o valor não for encontrado
+    //Se não encontrou, retorna -1
+    return -1;
 }
 
+//============================================================================================================
 
-
-
-// Informa o tamanho da lista (o número de itens presentes nela).
-// Retorno: número de itens na lista ou -1 em erro.
+// Retorna o número de itens na lista.
 int lista_tamanho(struct lista_t *lst)
 {
-    if (lst == NULL) // Verifica se a lista é nula
+    if (lst == NULL)
         return -1;
 
-    return lst->tamanho; // Retorna o tamanho da lista
+    return lst->tamanho;
 }
 
+//============================================================================================================
 
-
-// Imprime o conteúdo da lista do início ao fim no formato "item item ...",
-// com um espaço entre itens, sem espaços antes/depois, sem newline.
+// Imprime o conteúdo da lista do início ao fim.
 void lista_imprime(struct lista_t *lst)
 {
-    if (lst == NULL || lst->prim == NULL) // Verifica se a lista é nula ou vazia
+    if (lst == NULL || lst->prim == NULL)
+        return;
+
+    struct item_t *atual = lst->prim;
+    while (atual != NULL)
     {
-        return; // Não imprime nada se a lista estiver vazia
-    }
-
-    struct item_t *atual = lst->prim; // Ponteiro para percorrer a lista
-    while (atual != NULL) // Enquanto não chegar ao final da lista
-    {
-        printf("%d", atual->valor); // Imprime o valor do item
-
-        atual = atual->prox; // Move para o próximo item
-
-        if (atual != NULL) // Se não for o último item, imprime um espaço
-        {
+        printf("%d", atual->valor);
+        atual = atual->prox;
+        if (atual != NULL)
             printf(" ");
-        }
     }
 }
