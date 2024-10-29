@@ -127,61 +127,61 @@ int lista_insere(struct lista_t *lst, int item, int pos)
 // Retira o item da lista da posição indicada.
 int lista_retira(struct lista_t *lst, int *item, int pos)
 {
-    if (lst == NULL || item == NULL)
+    if (lst == NULL || item == NULL) 
         return -1;
 
-    if (lst->tamanho == 0)
+    if (lst->tamanho == 0) 
         return -1;
 
     struct item_t *atual;
 
-    // Se posição for igual -1 ou maior ou igual ao tamanho, retira do final.
-    if (pos < 0 || pos >= lst->tamanho)
+    // Se posição for igual a -1 ou maior ou igual ao tamanho, retira do final.
+    if (pos < 0 || pos >= lst->tamanho) 
     {
         atual = lst->ult;
 
-        if (atual == NULL)
+        if (atual == NULL) 
             return -1;
 
         *item = atual->valor;
 
-        if (atual->ant != NULL)
+        if (atual->ant != NULL) 
         {
             lst->ult = atual->ant;
             lst->ult->prox = NULL;
-        }
-        else
+        } 
+        else 
         {
             lst->prim = NULL;
             lst->ult = NULL;
         }
 
         free(atual);
-    }
-    else
+    } 
+    else 
     {
         atual = lst->prim;
 
         // Percorre a lista até a posição indicada.
-        for (int i = 0; i < pos && atual != NULL; i++)
+        for (int i = 0; i < pos; i++) 
         {
             atual = atual->prox;
         }
 
-        if (atual == NULL)
+        if (atual == NULL) 
             return -1;
 
         *item = atual->valor;
 
         // Ajusta os ponteiros ao remover o item da lista.
-        if (atual->ant != NULL)
+        if (atual->ant != NULL) 
             atual->ant->prox = atual->prox;
-        else
+        else 
             lst->prim = atual->prox;
 
-        if (atual->prox != NULL)
+        if (atual->prox != NULL) 
             atual->prox->ant = atual->ant;
-        else
+        else 
             lst->ult = atual->ant;
 
         free(atual);
@@ -193,41 +193,50 @@ int lista_retira(struct lista_t *lst, int *item, int pos)
 
 //============================================================================================================
 
-// Consulta o item na posição indicada.
+// Retorno: número de itens na lista ou -1 em erro.
 int lista_consulta(struct lista_t *lst, int *item, int pos)
 {
-    if (lst == NULL || item == NULL)
+    if (lst == NULL || item == NULL) 
         return -1;
 
-    if (lst->tamanho == 0)
+    if (lst->tamanho == 0) 
         return -1;
 
     struct item_t *atual;
 
-    // Se posição for -1 ou maior que o tamanho da lista, retorna erro
-    if (pos < 0 || pos >= lst->tamanho)
-        return -1;
+    // Se posição for -1, consulta o item do final da lista.
+    if (pos == -1) 
+    {
+        atual = lst->ult;
+        if (atual == NULL) 
+            return -1;
 
-    else
+        *item = atual->valor;
+    } 
+    else if (pos < 0 || pos >= lst->tamanho) 
+    {
+        return -1; // Retorna erro se a posição for inválida.
+    } 
+    else 
     {
         atual = lst->prim;
 
         // Percorre a lista até a posição desejada.
-        for (int i = 0; i < pos; i++)
+        for (int i = 0; i < pos; i++) 
         {
-            if (atual == NULL)
+            if (atual == NULL) 
                 return -1;
 
             atual = atual->prox;
         }
 
-        if (atual == NULL)
+        if (atual == NULL) 
             return -1;
 
-        *item = atual->valor;
+        *item = atual->valor; // Armazena o valor do item encontrado.
     }
 
-    return lst->tamanho;
+    return lst->tamanho; // Retorna o número de itens na lista.
 }
 
 //============================================================================================================
