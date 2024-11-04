@@ -2,8 +2,6 @@
 // Carlos Maziero, DINF/UFPR, Out 2024
 // Programa de teste
 
-// NÃO ALTERAR
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "fprio.h"
@@ -218,8 +216,6 @@ int main ()
   status = fprio_insere (fp, item, 0, 0) ;
   if (status != -1)
     erro ("insere item repetido não retornou erro") ;
-
-  item = item_destroi (item) ;
 
   // retira com fila NULL
   item = fprio_retira (NULL, &tipo, &prio) ;

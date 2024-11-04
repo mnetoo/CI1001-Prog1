@@ -36,27 +36,31 @@ struct fprio_t *fprio_cria()
 
 //------------------------------------------------------------------------------------------------------
 
-// Remove todos os nodos da fila e a libera.
-// ATENÇÃO: a memória de cada item deve ser liberada por quem a alocou.
+// Libera todas as estruturas de dados da fila, inclusive os itens.
 // Retorno: NULL.
 struct fprio_t *fprio_destroi(struct fprio_t *f) 
 {
     if (f == NULL)
         return NULL;
 
-    struct fpnodo_t *atual = f->prim; // Ponto para o primeiro nodo da fila
-    struct fpnodo_t *temp;             // Armazenar o nodo
+    struct fpnodo_t *atual = f->prim; // Ponteiro para o primeiro nodo da fila
+    struct fpnodo_t *temp;             // Armazena o nodo atual
 
-    // Percorre a fila e libera cada nodo
+    // Percorre a fila e libera cada nodo e item
     while (atual != NULL) 
     {
         temp = atual;     
         atual = atual->prox; 
 
-        // Libera a memória do nodo
+        // Libera o item do nodo
+        if (temp->item != NULL)
+            free(temp->item);
+
+        // Libera o nodo
         free(temp);
     }
 
+    // Libera a fila
     free(f);
     return NULL;
 }
