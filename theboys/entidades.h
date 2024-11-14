@@ -7,6 +7,16 @@
 #include "lista.h"
 
 
+#define T_INICIO          0
+#define T_FIM_DO_MUNDO    525600
+#define N_TAMANHO_MUNDO   20000
+#define N_HABILIDADES     10
+#define N_HEROIS          (N_HABILIDADES * 5)
+#define N_BASES           (N_HEROIS / 5)
+#define N_MISSOES         (T_FIM_DO_MUNDO / 100)
+
+
+
 // Definindo as estruturas
 struct HEROI 
 {
@@ -24,10 +34,10 @@ struct BASE
 {
     int ID;             
     int lotacao;         
-    struct cjto_t presentes;  
-    struct fprio_t espera;  
-    int localX;         
-    int localY;          
+    struct cjto_t *presentes;  
+    struct fprio_t *espera;  
+    int local_baseX;         
+    int local_baseY;          
 };
 
 /*=====================================================================================================================================*/
@@ -37,8 +47,8 @@ struct MISSAO
     int ID;             
     struct cjto_t *habilidade;  
     int perigo;          
-    int localX;          
-    int localY;    
+    int local_missaoX;          
+    int local_missaoY;    
 };
 
 /*=====================================================================================================================================*/
@@ -46,28 +56,34 @@ struct MISSAO
 struct MUNDO 
 {
     int NHerois;         
-    struct H *herois;    
+    struct HEROI HEROIS_MUNDO[N_HEROIS];    
     int NBases;          
-    struct B *bases;     
+    struct BASE BASES_MUNDO[N_BASES];     
     int NMissoes;        
-    struct M *missoes;  
+    struct MISSAO MISSOES_MUNDO[N_MISSOES];  
     int NHabilidades;    
-    int TamX;            
-    int TamY;           
-    int relogio;         
+    int TAM_MUNDO;         
+    int TEMPO;         
 };
 
 /*=====================================================================================================================================*/
 
-struct Evento 
+struct evento_t 
 {
-    int tempo;     // Tempo do evento (em minutos)
-    int heroiID;   // ID do herói
-    int baseID;    // ID da base de destino
-    char tipo[10]; // Tipo do evento (exemplo: "CHEGA")
+    int tempo;  /* tempo logico do evento */
+    int tipo;   /* inteiro para diferenciar os diferentes tipos de evento */
+    int dado1;  /* um inteiro para guardar dados do evento */
+    int dado2;  /* um inteiro para guardar dados do evento */
 };
 
 /*=====================================================================================================================================*/
 
+struct distancia_base 
+{
+    double distancia;
+    int id_base;
+};
+
+/*=====================================================================================================================================*/
 
 #endif
