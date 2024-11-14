@@ -18,7 +18,7 @@
 
 
 // Definindo as estruturas
-struct HEROI 
+struct heroi 
 {
     int ID;           
     int habilidade;
@@ -30,7 +30,7 @@ struct HEROI
 
 /*=====================================================================================================================================*/
 
-struct BASE 
+struct base 
 {
     int ID;             
     int lotacao;         
@@ -42,7 +42,7 @@ struct BASE
 
 /*=====================================================================================================================================*/
 
-struct MISSAO 
+struct missao 
 {
     int ID;             
     struct cjto_t *habilidade;  
@@ -53,17 +53,17 @@ struct MISSAO
 
 /*=====================================================================================================================================*/
 
-struct MUNDO 
+struct mundo 
 {
     int NHerois;         
-    struct HEROI HEROIS_MUNDO[N_HEROIS];    
+    struct heroi vetor_herois[N_HEROIS];    
     int NBases;          
-    struct BASE BASES_MUNDO[N_BASES];     
+    struct base vetor_bases[N_BASES];     
     int NMissoes;        
-    struct MISSAO MISSOES_MUNDO[N_MISSOES];  
+    struct missao vetor_missoes[N_MISSOES];  
     int NHabilidades;    
-    int TAM_MUNDO;         
-    int TEMPO;         
+    int tamanho_mundo;         
+    int tempo;         
 };
 
 /*=====================================================================================================================================*/
