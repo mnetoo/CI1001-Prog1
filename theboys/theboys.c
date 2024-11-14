@@ -52,30 +52,27 @@ int aleat(int min, int max)
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-struct MUNDO cria_mundo()
+//FUNÇÃO PARA CRIAR MUNDO - INICIALIZA HERÓIS, BASES, MISSÕES
+struct mundo cria_mundo()
 {
-    struct MUNDO mundo;
+    struct mundo mundo;
 
     mundo.NHerois = N_HEROIS;
     mundo.NBases = N_BASES;
     mundo.NMissoes = N_MISSOES;
-    mundo.TAM_MUNDO = N_TAMANHO_MUNDO;
-    mundo.TEMPO = 0;
+    mundo.tamanho_mundo = N_TAMANHO_MUNDO;
+    mundo.tempo = 0;
     mundo.NHabilidades = N_HABILIDADES;
 
     // INICIALIZANDO OS HERÓIS
     for (int i = 0; i < N_HEROIS; i++)
     {
-        mundo.HEROIS_MUNDO[i].ID = i;
-        mundo.HEROIS_MUNDO[i].habilidade = cria_cjt(N_HABILIDADES);
-        mundo.HEROIS_MUNDO[i].paciencia = aleat(0, 100);
-        mundo.HEROIS_MUNDO[i].velocidade = aleat(50, 5000);
-        mundo.HEROIS_MUNDO[i].experiencia = 0;
-        mundo.HEROIS_MUNDO[i].base = -1;
+        mundo.vetor_herois[i].ID = i;
+        mundo.vetor_herois[i].habilidade = cria_cjt(N_HABILIDADES);
+        mundo.vetor_herois[i].paciencia = aleat(0, 100);
+        mundo.vetor_herois[i].velocidade = aleat(50, 5000);
+        mundo.vetor_herois[i].experiencia = 0;
+        mundo.vetor_herois[i].base = -1;
 
         int aleatorio = aleat(1, 3);
 
@@ -85,19 +82,19 @@ struct MUNDO cria_mundo()
             do
             {
                 nova_habilidade = aleat(0, N_HABILIDADES - 1);
-            } while (pertence_cjt(mundo.HEROIS_MUNDO[i].habilidade, nova_habilidade));
-            insere_cjt(mundo.HEROIS_MUNDO[i].habilidade, nova_habilidade);
+            } while (pertence_cjt(mundo.vetor_herois[i].habilidade, nova_habilidade));
+            insere_cjt(mundo.vetor_herois[i].habilidade, nova_habilidade);
         }
     }
 
     // INICIALIZANDO AS MISSOES
     for (int i = 0; i < N_MISSOES; i++)
     {
-        mundo.MISSOES_MUNDO[i].ID = i;
-        mundo.MISSOES_MUNDO[i].habilidade = cria_cjt(N_HABILIDADES);
-        mundo.MISSOES_MUNDO[i].perigo = aleat(0, 100);
-        mundo.MISSOES_MUNDO[i].local_missaoX = aleat(0, N_TAMANHO_MUNDO - 1);
-        mundo.MISSOES_MUNDO[i].local_missaoY = aleat(0, N_TAMANHO_MUNDO - 1);
+        mundo.vetor_missoes[i].ID = i;
+        mundo.vetor_missoes[i].habilidade = cria_cjt(N_HABILIDADES);
+        mundo.vetor_missoes[i].perigo = aleat(0, 100);
+        mundo.vetor_missoes[i].local_missaoX = aleat(0, N_TAMANHO_MUNDO - 1);
+        mundo.vetor_missoes[i].local_missaoY = aleat(0, N_TAMANHO_MUNDO - 1);
 
         int aleatorio = aleat(6, 10);
 
@@ -107,251 +104,155 @@ struct MUNDO cria_mundo()
             do
             {
                 nova = aleat(0, N_HABILIDADES - 1);
-            } while (pertence_cjt(mundo.MISSOES_MUNDO[i].habilidade, nova));
-            insere_cjt(mundo.MISSOES_MUNDO[i].habilidade, nova);
+            } while (pertence_cjt(mundo.vetor_missoes[i].habilidade, nova));
+            insere_cjt(mundo.vetor_missoes[i].habilidade, nova);
         }
     }
 
     // INICIALIZANDO AS BASES
     for (int i = 0; i < N_BASES; i++)
     {
-        mundo.BASES_MUNDO[i].ID = i;
-        mundo.BASES_MUNDO[i].lotacao = aleat(3, 10);
-        mundo.BASES_MUNDO[i].presentes = cria_cjt(mundo.BASES_MUNDO[i].lotacao);
-        mundo.BASES_MUNDO[i].espera = cria_fprio();
-        mundo.BASES_MUNDO[i].local_baseX = aleat(0, N_TAMANHO_MUNDO - 1);
-        mundo.BASES_MUNDO[i].local_baseY = aleat(0, N_TAMANHO_MUNDO - 1);
+        mundo.vetor_bases[i].ID = i;
+        mundo.vetor_bases[i].lotacao = aleat(3, 10);
+        mundo.vetor_bases[i].presentes = cria_cjt(mundo.vetor_bases[i].lotacao);
+        mundo.vetor_bases[i].espera = cria_fprio();
+        mundo.vetor_bases[i].local_baseX = aleat(0, N_TAMANHO_MUNDO - 1);
+        mundo.vetor_bases[i].local_baseY = aleat(0, N_TAMANHO_MUNDO - 1);
     }
 
     return mundo;
 }
 
 
-
-
-
-
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-
-void destroi_mundo(struct MUNDO *mundo)
+//FUNÇÃO PARA DESTRUIR O MUNDO CRIADO
+void destroi_mundo(struct mundo *mundo)
 {
     for (int i = 0; i < N_HEROIS; i++)
-        destroi_cjt(mundo->HEROIS_MUNDO[i].habilidade);
+        destroi_cjt(mundo->vetor_herois[i].habilidade);
 
     for (int i = 0; i < N_BASES; i++)
     {
-        destroi_cjt(mundo->BASES_MUNDO[i].presentes);
-        destroi_fprio(mundo->BASES_MUNDO[i].espera);
+        destroi_cjt(mundo->vetor_bases[i].presentes);
+        destroi_fprio(mundo->vetor_bases[i].espera);
     }
 
     for (int i = 0; i < N_MISSOES; i++)
-        destroi_cjt(mundo->MISSOES_MUNDO[i].habilidade);
+        destroi_cjt(mundo->vetor_missoes[i].habilidade);
 }
-
-
-
-
-
-
 
 
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-
-/* retira o heroi do conjunto de presentes da base e retorna uma base aleatoria */
-int evento_sai(int tempo, struct MUNDO *mundo, int h, int b)
+//  TIRA O HEROI DO CONJUNTO DE PRESENTES DA BASE 
+//  RETORNA UMA BASE ALEATÓRIA
+int evento_sai(int tempo, struct mundo *mundo, int h, int b)
 {
     int base_aleat;
 
-    retira_cjt(mundo->BASES_MUNDO[b].presentes, mundo->HEROIS_MUNDO[h].ID);
+    retira_cjt(mundo->vetor_bases[b].presentes, mundo->vetor_herois[h].ID);
 
-    printf("%6d: SAI    HEROI %2d BASE %d (%2d/%2d)\n", tempo, mundo->HEROIS_MUNDO[h].ID,
-           mundo->BASES_MUNDO[b].ID, cjto_card(mundo->BASES_MUNDO[b].presentes),
-           mundo->BASES_MUNDO[b].lotacao);
+    printf("%6d: SAI    HEROI %2d BASE %d (%2d/%2d)\n", tempo, mundo->vetor_herois[h].ID,
+           mundo->vetor_bases[b].ID, cjto_card(mundo->vetor_bases[b].presentes),
+           mundo->vetor_bases[b].lotacao);
 
-    /* define uma base destino aleatoria */
-    /* um do while para que o heroi nao va para a mesma base */
+    /// Define uma base destino aleatória
+    // (DO WHILE) Impede que o  herói vá para a mesa base
     do
         base_aleat = aleat(0, N_BASES - 1);
-    while (base_aleat == mundo->BASES_MUNDO[b].ID);
+    while (base_aleat == mundo->vetor_bases[b].ID);
 
     return base_aleat;
 }
 
 
-
-
-
-
-
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-
-/* calcula o TPB e retorna o valor */
-int evento_entra(int tempo, struct MUNDO *mundo, int h, int b)
+//  CALCULA O TPB E RETORNA O VALOR
+int evento_entra(int tempo, struct mundo *mundo, int h, int b)
 {
     int TPB;
 
-    TPB = 15 + (mundo->HEROIS_MUNDO[h].paciencia * aleat(1, 20));
+    TPB = 15 + (mundo->vetor_herois[h].paciencia * aleat(1, 20));
 
-    printf("%6d: ENTRA  HEROI %2d BASE %d (%2d/%2d) SAI %d\n", tempo, mundo->HEROIS_MUNDO[h].ID,
-           mundo->BASES_MUNDO[b].ID, cjto_card(mundo->BASES_MUNDO[b].presentes),
-           mundo->BASES_MUNDO[b].lotacao, tempo + TPB);
+    printf("%6d: ENTRA  HEROI %2d BASE %d (%2d/%2d) SAI %d\n", tempo, mundo->vetor_herois[h].ID,
+           mundo->vetor_bases[b].ID, cjto_card(mundo->vetor_bases[b].presentes),
+           mundo->vetor_bases[b].lotacao, tempo + TPB);
 
     return TPB;
 }
 
 
-
-
-
-
-
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-
-void evento_avisa(int tempo, struct MUNDO *mundo, int b)
+//  FUNÇÃO QUE AVISA O ESTADO DE UMA BASE PARA O PORTEIRO
+void evento_avisa(int tempo, struct mundo *mundo, int b)
 {
-    printf("%6d: AVISA  PORTEIRO BASE %d (%2d/%2d) FILA ", tempo, mundo->BASES_MUNDO[b].ID,
-           cjto_card(mundo->BASES_MUNDO[b].presentes), mundo->BASES_MUNDO[b].lotacao);
+    printf("%6d: AVISA  PORTEIRO BASE %d (%2d/%2d) FILA ", tempo, mundo->vetor_bases[b].ID,
+           cjto_card(mundo->vetor_bases[b].presentes), mundo->vetor_bases[b].lotacao);
 
-    imprime_cjt(mundo->BASES_MUNDO[b].presentes);
+    imprime_cjt(mundo->vetor_bases[b].presentes);
 
     return;
 }
 
 
-
-
-
-
-
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* adiciona o ID do heroi na fila de espera da base */
-void evento_espera(int tempo, struct MUNDO *mundo, int h, int b)
+//  FUNÇÃO PARA ADICIONAR O HEROI NA FILA DE ESPERA DA BASE
+void evento_espera(int tempo, struct mundo *mundo, int h, int b)
 {   
 
-    printf("%6d: ESPERA HEROI %2d BASE %d (%2d)\n", tempo, mundo->HEROIS_MUNDO[h].ID,
-           mundo->BASES_MUNDO[b].ID, fprio_tamanho(mundo->BASES_MUNDO[b].espera));
+    printf("%6d: ESPERA HEROI %2d BASE %d (%2d)\n", tempo, mundo->vetor_herois[h].ID,
+           mundo->vetor_bases[b].ID, fprio_tamanho(mundo->vetor_bases[b].espera));
 
-    fprio_insere(mundo->BASES_MUNDO[b].espera, mundo->HEROIS_MUNDO[h].ID, mundo->HEROIS_MUNDO, PRIORIDADE);
+    fprio_insere(mundo->vetor_bases[b].espera, mundo->vetor_herois[h].ID, mundo->vetor_herois, PRIORIDADE);
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-
-
-
-
-
-
-/* calcula a distancia do heroi ate a outra base e a retorna */
-int evento_viaja(int tempo, struct MUNDO *mundo, int h, int base_destino)
+//  FUNÇÃO QUE CALCULA DISTÂNCIA DO HERIO ATEÉ A OUTRA BASE E RETORNA A DURAÇÃO
+int evento_viaja(int tempo, struct mundo *mundo, int h, int base_destino)
 {
-    /*Obtemos as posições das bases de origem e destino*/
-    int pos_x_origem = mundo->BASES_MUNDO[mundo->HEROIS_MUNDO[h].base].local_baseX;
-    int pos_y_origem = mundo->BASES_MUNDO[mundo->HEROIS_MUNDO[h].base].local_baseY;
-    int pos_x_destino = mundo->BASES_MUNDO[base_destino].local_baseX;
-    int pos_y_destino = mundo->BASES_MUNDO[base_destino].local_baseY;
+    //  POSIÇÕES DAS BASES DE DESTINO E ORIGEM
+    int pos_x_origem = mundo->vetor_bases[mundo->vetor_herois[h].base].local_baseX;
+    int pos_y_origem = mundo->vetor_bases[mundo->vetor_herois[h].base].local_baseY;
+    int pos_x_destino = mundo->vetor_bases[base_destino].local_baseX;
+    int pos_y_destino = mundo->vetor_bases[base_destino].local_baseY;
 
-    /* Calcula a distância cartesiana*/
+    //  CALCULA A DISTÂNCIA
     double distancia_x = pow(pos_x_destino - pos_x_origem, 2);
     double distancia_y = pow(pos_y_destino - pos_y_origem, 2);
     int distancia = sqrt(distancia_x + distancia_y);
 
-    int duracao = (int)ceil(distancia / mundo->HEROIS_MUNDO[h].velocidade);
+    int duracao = (int)ceil(distancia / mundo->vetor_herois[h].velocidade);
 
-    printf("%6d: VIAJA  HEROI %2d BASE %d BASE %d DIST %d VEL %d CHEGA %d\n", tempo, mundo->HEROIS_MUNDO[h].ID,
-           mundo->HEROIS_MUNDO[h].base, base_destino, distancia,
-           mundo->HEROIS_MUNDO[h].velocidade, tempo + duracao);
+    printf("%6d: VIAJA  HEROI %2d BASE %d BASE %d DIST %d VEL %d CHEGA %d\n", tempo, mundo->vetor_herois[h].ID,
+           mundo->vetor_herois[h].base, base_destino, distancia,
+           mundo->vetor_herois[h].velocidade, tempo + duracao);
 
-    /* retorna o tempo de duracao da viajem */
     return duracao;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-
-
-
-
-/* define uma base destino aleatoria*/
-int evento_desiste(int tempo, struct MUNDO *mundo, int h, int b)
+//  DEFINE UMA BASE DE DESTINO ALEATÓRIA
+int evento_desiste(int tempo, struct mundo *mundo, int h, int b)
 {
     int base_destino;
 
-    printf("%6d: DESISTE HEROI %2d BASE %d\n", tempo, mundo->HEROIS_MUNDO[h].ID,
-           mundo->BASES_MUNDO[b].ID);
+    printf("%6d: DESISTE HEROI %2d BASE %d\n", tempo, mundo->vetor_herois[h].ID,
+           mundo->vetor_bases[b].ID);
 
     base_destino = aleat(0, N_BASES - 1);
 
@@ -359,73 +260,54 @@ int evento_desiste(int tempo, struct MUNDO *mundo, int h, int b)
 }
 
 
-
-
-
-
-
-
-
-
 /*=====================================================================================================================================*/
 
 
-
-
-
-
-/*
-Evento CHEGA -
-Representa um herói H chegando em uma base B no instante T. Ao chegar,
-o herói analisa o tamanho da fila e decide se espera para entrar ou desiste
-*/
-
-int evento_chega(int tempo, struct MUNDO *mundo, int h, int b)
+//  EVENTO CHEGA
+//  HEROI (H) CHEGA NA BASE (B) NO TEMPO (T), (H) ANALISA O TAM_FILA E DECIDE SE ESPERA
+int evento_chega(int tempo, struct mundo *mundo, int h, int b)
 {
     int vagas, fila_espera_vazia;
     int espera = 0;
 
-    mundo->HEROIS_MUNDO[h].base = mundo->BASES_MUNDO[b].ID;
+    mundo->vetor_herois[h].base = mundo->vetor_bases[b].ID;
 
-    /*Verifica se há vagas na base*/
-    vagas = mundo->BASES_MUNDO[b].lotacao > cjto_card(mundo->BASES_MUNDO[b].presentes);
+    //  VERIFICAÇÃO SE HÁ VAGAS NA BASE
+    vagas = mundo->vetor_bases[b].lotacao > cjto_card(mundo->vetor_bases[b].presentes);
 
-    /*Verifica se a fila de espera está vazia*/
-    fila_espera_vazia = fila_vazia(mundo->BASES_MUNDO[b].espera);
+    //  VERIFICAÇÃO SE A FILA DE ESPERA ESTÁ VAZIA
+    fila_espera_vazia = fprio_tamanho(mundo->vetor_bases[b].espera);
 
-    /*Determina se o herói decide esperar ou desiste*/
+    
+    //  DECISÃO DO HEROI (H)
     if (vagas && fila_espera_vazia)
-        espera = 1; /*O herói espera se há vagas e a fila está vazia*/
+        espera = 1; // ESPERA
 
-    else if (mundo->HEROIS_MUNDO[h].paciencia > (10 * fprio_tamanho(mundo->BASES_MUNDO[b].espera)))
-        espera = 1;
+    else if (mundo->vetor_herois[h].paciencia > (10 * fprio_tamanho(mundo->vetor_bases[b].espera)))
+        espera = 1; // ESPERA
 
     else
-        espera = 0;
+        espera = 0; // NÃO ESPERA
+
+
 
     if (espera)
     {
-        printf("%6d: CHEGA HEROI %2d BASE %d (%2d/%2d) ESPERA \n", tempo, mundo->HEROIS_MUNDO[h].ID,
-               mundo->BASES_MUNDO[b].ID, cjto_card(mundo->BASES_MUNDO[b].presentes), mundo->BASES_MUNDO[b].lotacao);
-        return 1;
+        printf("%6d: CHEGA HEROI %2d BASE %d (%2d/%2d) ESPERA \n", tempo, mundo->vetor_herois[h].ID,
+               mundo->vetor_bases[b].ID, cjto_card(mundo->vetor_bases[b].presentes), mundo->vetor_bases[b].lotacao);
+        return 1; // ADD LEF (EVENTO ESPERA)
     }
 
     else
     {
-        printf("%6d: CHEGA HEROI %2d BASE %d (%2d/%2d) DESISTE \n", tempo, mundo->HEROIS_MUNDO[h].ID,
-               mundo->BASES_MUNDO[b].ID, cjto_card(mundo->BASES_MUNDO[b].presentes), mundo->BASES_MUNDO[b].lotacao);
-        return 0;
+        printf("%6d: CHEGA HEROI %2d BASE %d (%2d/%2d) DESISTE \n", tempo, mundo->vetor_herois[h].ID,
+               mundo->vetor_bases[b].ID, cjto_card(mundo->vetor_bases[b].presentes), mundo->vetor_bases[b].lotacao);
+        return 0; // ADD LEF (EVENTO DESISTE)
     }
 }
 
 
-
-
 /*=====================================================================================================================================*/
-
-
-
-
 
 
 int comparar(const void* a, const void* b) 
@@ -434,12 +316,23 @@ int comparar(const void* a, const void* b)
 }
 
 
+/*=====================================================================================================================================*/
 
+
+int evento_missao(int tempo, int indice_missao, struct mundo *mundo);
 
 
 /*=====================================================================================================================================*/
 
 
+void evento_fim(int tempo, struct mundo *mundo, int missao_concluida, int missao_adiada);
 
 
+/*=====================================================================================================================================*/
 
+
+// Evento MORRE - Marca a morte de um herói, libera vaga na base e avisa o porteiro
+void evento_morre(int tempo, struct mundo *mundo, int h, int b);
+
+
+/*=====================================================================================================================================*/
