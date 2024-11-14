@@ -1,7 +1,6 @@
 #ifndef ENTIDADE
 #define ENTIDADE
 
-
 #include "fprio.h"
 #include "conjunto.h"
 #include "lista.h"
@@ -16,23 +15,27 @@
 #define N_MISSOES         (T_FIM_DO_MUNDO / 100)
 
 
+/*=====================================================================================================================================*/
+
 
 // Definindo as estruturas
 struct heroi 
 {
-    int ID;           
-    int habilidade;
+    int id_heroi;           
+    struct cjto_t *habilidade;
     int paciencia;   
     int velocidade;   
     int experiencia;  
     int base;
+    int vida;   //(1 - VIVO) (0 - MORTO) 
 };
+
 
 /*=====================================================================================================================================*/
 
 struct base 
 {
-    int ID;             
+    int id_base;             
     int lotacao;         
     struct cjto_t *presentes;  
     struct fprio_t *espera;  
@@ -42,16 +45,19 @@ struct base
 
 /*=====================================================================================================================================*/
 
+
 struct missao 
 {
-    int ID;             
+    int id_missao;             
     struct cjto_t *habilidade;  
     int perigo;          
     int local_missaoX;          
     int local_missaoY;    
 };
 
+
 /*=====================================================================================================================================*/
+
 
 struct mundo 
 {
@@ -66,17 +72,21 @@ struct mundo
     int tempo;         
 };
 
+
 /*=====================================================================================================================================*/
+
 
 struct evento_t 
 {
-    int tempo;  /* tempo logico do evento */
-    int tipo;   /* inteiro para diferenciar os diferentes tipos de evento */
-    int dado1;  /* um inteiro para guardar dados do evento */
-    int dado2;  /* um inteiro para guardar dados do evento */
+    int tempo;  //  TEMPO DO EVENTO 
+    int tipo;   //  TIPOS DE EVENTO
+    int dado1;  //  DADOS DO EVENTO
+    int dado2;  //  DADOS DO EVENTO
 };
 
+
 /*=====================================================================================================================================*/
+
 
 struct distancia_base 
 {
@@ -84,6 +94,8 @@ struct distancia_base
     int id_base;
 };
 
+
 /*=====================================================================================================================================*/
+
 
 #endif
