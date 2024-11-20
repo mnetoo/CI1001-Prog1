@@ -5,7 +5,7 @@
 #include "conjunto.h"
 #include "lista.h"
 
-
+    
 #define T_INICIO          0
 #define T_FIM_DO_MUNDO    525600
 #define N_TAMANHO_MUNDO   20000
