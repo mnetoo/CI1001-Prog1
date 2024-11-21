@@ -20,14 +20,6 @@
 #include "eventos.h"
 
 
-#define T_INICIO 0
-#define T_FIM_DO_MUNDO 525600
-#define N_TAMANHO_MUNDO 20000
-#define N_HABILIDADES 10
-#define N_HEROIS (N_HABILIDADES * 5)
-#define N_BASES (N_HEROIS / 5)
-#define N_MISSOES (T_FIM_DO_MUNDO / 100)
-
 
 #define CHEGADA 0
 #define ESPERA 1
@@ -43,48 +35,53 @@
 
 
 
-
 int main ()
 {
     srand(0);
     int espera_ou_desiste = 0, tpb = 0;
     int destino = 0, duracao = 0, aux = 0;
     int concluida = 0, missao_concluida = 0, missao_adiada = 0;
+    int xtipo, xtempo;
 
     struct fprio_t *simulacao = fprio_cria();
     struct evento_t *evento;
     struct evento_t *novo_evento;
     struct mundo m = cria_mundo(); 
 
-
     //  EVENTOS INICIAIS PARA A CHEGADA DOS HEROIS
     for (int i = 0; i < N_HEROIS; i++) 
     {
         int tempo = aleat(1, 4321);
-        evento = cria_evento(tempo, 0, m.vetor_herois[i].id_heroi, m.vetor_bases[aleat(0, N_BASES-1)].id_base);
-        fprio_insere(simulacao, evento, 0, PRIORIDADE);
+	//fprintf(stderr,"inserindo heroi %d no tempo %d\n", i, tempo);
+        evento = cria_evento(tempo, CHEGADA, m.vetor_herois[i].id_heroi, m.vetor_bases[aleat(0, N_BASES-1)].id_base);
+	if (evento == NULL)
+	  exit(0);
+        fprio_insere(simulacao, evento, 0, tempo);
     }
 
 
     //  EVENTOS INICIAIS PARA AS MISSOES
     for (int i = 0; i < N_MISSOES; i++) 
     {
-        int tmpo = aleat(0, T_FIM_DO_MUNDO);
-        evento = cria_evento(tmpo, 7, m.vetor_missoes[i].id_missao, 0);
-        fprio_insere(simulacao, evento, 0, PRIORIDADE);
+        int tempo = aleat(0, T_FIM_DO_MUNDO);
+        evento = cria_evento(tempo, MISSAO, m.vetor_missoes[i].id_missao, 0);
+ 	if (evento == NULL)
+	  exit(0);
+       fprio_insere(simulacao, evento, 0, tempo);
     }
 
 
     //  ADICIONA O EVENTO FINAL PARA O FIM DA SIMULAÇÃO
     evento = cria_evento(T_FIM_DO_MUNDO, FIM, 0, 0);
-    fprio_insere(simulacao, evento, 0, PRIORIDADE);
+    if (evento == NULL)
+      exit(0);
+    fprio_insere(simulacao, evento, 0, T_FIM_DO_MUNDO);
 
-
-    while (fprio_tamanho(simulacao) > 0) 
-    {
-        evento = fprio_retira(simulacao, &evento->tipo, &evento->tempo);
+    evento = fprio_retira(simulacao, &xtipo, &xtempo);
+    while (evento->tempo <= T_FIM_DO_MUNDO)
+    { 
+	//fprintf(stderr,"fprio: %d / evento: %d\n", simulacao->num, evento->tipo);
         m.tempo = evento->tempo;
-
 
         switch (evento->tipo) 
         {
@@ -150,7 +147,7 @@ int main ()
 
 
             case VIAGEM:
-                duracao = viaja(evento->tempo, &m, evento->dado1, evento->dado2);
+            duracao = viaja(evento->tempo, &m, evento->dado1, evento->dado2);
                 novo_evento = cria_evento(m.tempo + duracao, CHEGADA, evento->dado1, evento->dado2);
                 fprio_insere(simulacao, novo_evento, CHEGADA, m.tempo);
                 break;
@@ -184,6 +181,8 @@ int main ()
                 return 0;
         }
         destroi_evento(evento);
+
+        evento = fprio_retira(simulacao, &xtipo, &xtempo);
     }
     return 0;
 }
