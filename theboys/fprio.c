@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "fprio.h"
+#include "entidades.h"
 
 
 
@@ -49,7 +50,7 @@ struct fprio_t *fprio_destroi(struct fprio_t *f)
     // Percorre a fila e libera cada nodo e item
     while (atual != NULL) 
     {
-        temp = atual;     
+        temp = atual;
         atual = atual->prox; 
 
         // Libera o item do nodo
@@ -121,7 +122,6 @@ int fprio_insere(struct fprio_t *f, void *item, int tipo, int prio)
         novo_nodo->prox = atual;    // Novo nodo aponta para o próximo
         if (anterior == NULL) 
             f->prim = novo_nodo;     // Novo nodo vira o primeiro
-
         else 
             anterior->prox = novo_nodo; // Nodo anterior aponta para o novo
 
@@ -178,7 +178,7 @@ int fprio_tamanho(struct fprio_t *f)
 // Imprime o conteúdo da fila no formato "(tipo prio) (tipo prio) ..."
 // Para cada item deve ser impresso seu tipo e sua prioridade, com um
 // espaço entre valores, sem espaços antes ou depois e sem nova linha.
-void fprio_imprime(struct fprio_t *f) 
+void fprio_imprime(struct fprio_t *f, struct mundo m) 
 {
     // Verifica se a fila é válida e não está vazia
     if (f == NULL || f->prim == NULL)
@@ -187,17 +187,53 @@ void fprio_imprime(struct fprio_t *f)
     struct fpnodo_t *atual = f->prim; // Inicia no primeiro nodo
     int primeiro = 1; // Controle do formato da saída
 
+
     // Percorre todos os nodos da fila
     while (atual != NULL) 
     {
         // Imprime um espaço antes do item, exceto para o primeiro
         if (!primeiro)
             printf(" ");
+
+        struct evento_t* evento = atual->item;
         
-        // Imprime o tipo e prioridade
-        printf("(%d %d)", atual->tipo, atual->prio);
+        printf("%d \n", m.vetor_herois[evento->dado2].id_heroi);
+                                                                                   
         primeiro = 0; // Marca que já imprimimos o primeiro item
 
         atual = atual->prox;
+    }
+}
+
+//------------------------------------------------------------------------------------------------------
+
+// Imprime o conteúdo da fila no formato "(tipo prio) (tipo prio) ..."
+// Para cada item deve ser impresso seu tipo e sua prioridade, com um
+// espaço entre valores, sem espaços antes ou depois e sem nova linha.
+void fprio_imprime_theboys(struct fprio_t *f) 
+{
+    // Verifica se a fila é válida e não está vazia
+    if (f == NULL || f->prim == NULL)
+        return;
+    
+    struct fpnodo_t *atual = f->prim; // Inicia no primeiro nodo
+    printf("%d", atual->tipo);
+
+    // Percorre todos os nodos da fila
+    while (atual != NULL) 
+    {
+        // Imprime um espaço antes do item, exceto para o primeiro
+        if (atual != f->prim)
+            printf(" ");
+        
+        // Imprime o tipo e prioridade
+
+//        if (atual->tipo == 0) // evento
+        struct evento_t* evento = atual->item;
+        printf("%d - %d", evento->dado1, evento->dado2);
+     
+        atual = atual->prox;
+        if (atual != NULL)
+            printf(" ");
     }
 }

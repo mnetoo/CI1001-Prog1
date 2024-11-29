@@ -6,7 +6,7 @@
 
 #ifndef FPRIO
 #define FPRIO
-
+#include "entidades.h"
 // descreve um nodo da fila de prioridades
 struct fpnodo_t
 {
@@ -38,8 +38,7 @@ struct fprio_t *fprio_destroi (struct fprio_t *f);
 // Retorno: número de itens na fila após a operação ou -1 se erro.
 int fprio_insere (struct fprio_t *f, void *item, int tipo, int prio);
 
-                    
-
+                  
 // Informa o número de itens na fila.
 // Retorno: N >= 0 ou -1 se erro.
 int fprio_tamanho (struct fprio_t *f);
@@ -47,6 +46,8 @@ int fprio_tamanho (struct fprio_t *f);
 // Imprime o conteúdo da fila no formato "(tipo prio) (tipo prio) ..."
 // Para cada item deve ser impresso seu tipo e sua prioridade, com um
 // espaço entre valores, sem espaços antes ou depois e sem nova linha.
-void fprio_imprime (struct fprio_t *f);
+void fprio_imprime (struct fprio_t *f, struct mundo m);
+
+void fprio_imprime_theboys(struct fprio_t *f);
 
 #endif

@@ -4,11 +4,12 @@
 #include "fprio.h"
 #include "conjunto.h"
 #include "lista.h"
+#include "fila.h"
 
     
 #define T_INICIO          0
-#define T_FIM_DO_MUNDO    525600
-#define N_TAMANHO_MUNDO   20000
+#define T_FIM_DO_MUNDO    100000
+#define N_TAMANHO_MUNDO   5000
 #define N_HABILIDADES     10
 #define N_HEROIS          (N_HABILIDADES * 5)
 #define N_BASES           (N_HEROIS / 5)
@@ -27,7 +28,7 @@ struct heroi
     int velocidade;   
     int experiencia;  
     int base;
-    int vida;   //(1 - VIVO) (0 - MORTO) 
+    bool vida;
 };
 
 
@@ -38,7 +39,7 @@ struct base
     int id_base;             
     int lotacao;         
     struct cjto_t *presentes;  
-    struct fprio_t *espera;  
+    struct fila_t *espera;  
     int local_baseX;         
     int local_baseY;          
 };
@@ -53,6 +54,7 @@ struct missao
     int perigo;          
     int local_missaoX;          
     int local_missaoY;    
+    int tentativas; 
 };
 
 
@@ -69,7 +71,9 @@ struct mundo
     struct missao vetor_missoes[N_MISSOES];  
     int NHabilidades;    
     int tamanho_mundo;         
-    int tempo;         
+    int tempo;
+    struct fprio_t* simulacao;
+
 };
 
 
@@ -80,8 +84,8 @@ struct evento_t
 {
     int tempo;  //  TEMPO DO EVENTO 
     int tipo;   //  TIPOS DE EVENTO
-    int dado1;  //  DADOS DO EVENTO
-    int dado2;  //  DADOS DO EVENTO
+    int dado1;  //  DADOS DO EVENTO id heroi, se sequencial
+    int dado2;  //  DADOS DO EVENTO id base, aleatório
 };
 
 

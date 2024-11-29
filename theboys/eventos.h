@@ -7,32 +7,6 @@
 #include "entidades.h"
 
 
-#define T_INICIO          0
-#define T_FIM_DO_MUNDO    525600
-#define N_TAMANHO_MUNDO   20000
-#define N_HABILIDADES     10
-#define N_HEROIS          (N_HABILIDADES * 5)
-#define N_BASES           (N_HEROIS / 5)
-#define N_MISSOES         (T_FIM_DO_MUNDO / 100)
-
-#define CHEGADA 0
-#define ESPERA 1
-#define DESISTE 2
-#define AVISA 3
-#define ENTRADA 4
-#define SAIDA 5
-#define VIAGEM 6
-#define MISSAO 7
-#define FIM 8
-
-#define PRIORIDADE 1
-#define TIPO_HEROI 0
-#define TIPO_BASE 1
-#define TIPO_MISSAO 3
-#define EVENTO_MORTE 1
-#define EVENTO_ADIADO 2
-
-
 
 
 
@@ -53,10 +27,10 @@ int sai (int tempo, struct mundo *mundo, int h, int b);
 int entra (int tempo, struct mundo *mundo, int h, int b);
 
 //  FUNÇÃO QUE AVISA O ESTADO DE UMA BASE PARA O PORTEIRO
-void avisa (int tempo, struct mundo *mundo, int b);
+void avisa (int tempo, struct mundo mundo, int b);
 
 //  FUNÇÃO PARA ADICIONAR O HEROI NA FILA DE ESPERA DA BASE
-void espera (int tempo, struct mundo *mundo, int h, int b);
+void espera (int tempo, struct mundo mundo, int h, int b);
 
 //  FUNÇÃO QUE CALCULA DISTÂNCIA DO HERIO ATEÉ A OUTRA BASE E RETORNA A DURAÇÃO
 int viaja (int tempo, struct mundo *mundo, int h, int base_destino);
@@ -66,7 +40,7 @@ int desiste (int tempo, struct mundo *mundo, int h, int b);
 
 //  EVENTO CHEGA
 //  HEROI (H) CHEGA NA BASE (B) NO TEMPO (T), (H) ANALISA O TAM_FILA E DECIDE SE ESPERA
-int chega (int tempo, struct mundo *mundo, int h, int b);
+int chega (int tempo, struct mundo mundo, int h, int b);
 
 // FUNÇÃO EVENTO FIM
 void fim (int tempo, struct mundo *mundo, int missao_concluida, int missao_adiada);
