@@ -21,6 +21,7 @@ struct fila_t
   struct nodo_t *ultimo;
   int num; //número elementos
   int capacidade;
+  int count;
 };
 
 // Cria uma fila vazia e a retorna;

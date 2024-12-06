@@ -8,8 +8,8 @@
 
     
 #define T_INICIO          0
-#define T_FIM_DO_MUNDO    100000
-#define N_TAMANHO_MUNDO   5000
+#define T_FIM_DO_MUNDO    525600    
+#define N_TAMANHO_MUNDO   20000
 #define N_HABILIDADES     10
 #define N_HEROIS          (N_HABILIDADES * 5)
 #define N_BASES           (N_HEROIS / 5)
@@ -41,7 +41,8 @@ struct base
     struct cjto_t *presentes;  
     struct fila_t *espera;  
     int local_baseX;         
-    int local_baseY;          
+    int local_baseY;     
+    int missoes_realizadas;     
 };
 
 /*=====================================================================================================================================*/
@@ -73,7 +74,11 @@ struct mundo
     int tamanho_mundo;         
     int tempo;
     struct fprio_t* simulacao;
-
+    int eventos_tratados;
+    int herois_mortos;
+    int total_tentativas;
+    int tentativas_max;
+    int tentativas_min;
 };
 
 

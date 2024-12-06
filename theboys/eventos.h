@@ -43,7 +43,7 @@ int desiste (int tempo, struct mundo *mundo, int h, int b);
 int chega (int tempo, struct mundo mundo, int h, int b);
 
 // FUNÇÃO EVENTO FIM
-void fim (int tempo, struct mundo *mundo, int missao_concluida, int missao_adiada);
+void fim (int tempo, struct mundo *mundo);
 
 int compara (const void* a, const void* b) ;
 

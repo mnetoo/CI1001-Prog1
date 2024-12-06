@@ -36,23 +36,18 @@
 #define PRIORIDADE 1
 
 
-
 int main ()
 {
-    srand(1);
-
-
+    srand(0);   
     struct mundo m = cria_mundo();
     struct evento_t *evento;
     struct evento_t *novo_evento;
-
-    // mundo.simulacao = fprio_cria(); - FEITO NO cria_mundo() - (RECOMENDAÇÃO MENOTTI)
-
-
-    int xtipo, xtempo;
+    int xtipo;
+    int xtempo;
 
 
 
+/* ======================================================================================================================================= */
 
 
     //  CHEGADA DE CADA HERÓIS NUMA BASE ALEATÓRIA
@@ -73,35 +68,13 @@ int main ()
     }
 
 
-    //DEBUG
-    for (int i= 0; i < N_HEROIS; i++)
-    {
-
-        printf("herói %d na base:   %d\n", i, m.vetor_herois[i].base);
-        printf("---- experiencia do heroi %d:   %d\n", i , m.vetor_herois[i].experiencia);
-        printf("---- paciencia do heroi %d:   %d\n", i , m.vetor_herois[i].paciencia);
-        printf("---- habilidades do heroi %d:   ", i);
-        printf("---- ");
-        cjto_imprime(m.vetor_herois[i].habilidade);
-        printf("\n");
-        printf("---- velocidade do heroi %d:   %d\n", i , m.vetor_herois[i].velocidade);
-        
-        if (m.vetor_herois[i].vida)
-            printf("---- herói %d vivo\n", i);
-
-        printf("\n");
-
-    }
-
-
-
-
+/* ======================================================================================================================================= */
 
 
     //  EVENTOS INICIAIS PARA AS MISSOES
     for (int i = 0; i < N_MISSOES; i++) 
     {
-        int tempo = aleat(0, T_FIM_DO_MUNDO);
+        int tempo = aleat(4320, T_FIM_DO_MUNDO);
 
         evento = cria_evento(tempo, MISSAO, m.vetor_missoes[i].id_missao, 0);
  	    
@@ -114,133 +87,80 @@ int main ()
        fprio_insere(m.simulacao, evento, MISSAO, tempo);
     }
 
-    //  DEBUG
-    for (int i = 0; i < N_MISSOES; i++)
-    {
-        printf("Missão %d inserida na fila de prioridade.\n", m.vetor_missoes[i].id_missao);
-        printf("Tempo: %d\n", aleat(0, T_FIM_DO_MUNDO));
-    }
 
-
-
-
-
-
+/* ======================================================================================================================================= */
 
 
     //  ADICIONA O EVENTO FINAL PARA O FIM DA SIMULAÇÃO
     int tempo_fim = T_FIM_DO_MUNDO;
-
     evento = cria_evento(tempo_fim, FIM, 0, 0);
-    
     if (evento == NULL) 
     {
         fprintf(stderr, "Erro ao criar evento de FIM!\n");
         exit(EXIT_FAILURE);
     }
-
     fprio_insere(m.simulacao, evento, FIM, tempo_fim);
 
-    //  DEBUG
-    printf("Evento final inserido na fila de prioridade.\n");
-    printf("Tipo: FIM, Tempo: %d\n", tempo_fim);
 
-
-
-
-
+/* ======================================================================================================================================= */
 
 
     evento = fprio_retira(m.simulacao, &xtipo, &xtempo);
-
-    if (evento != NULL) 
-    {
-        printf("Evento retirado:\n");
-        printf("Tipo: %d, Prioridade: %d\n", xtipo, xtempo);
-        // Caso o evento tenha campos adicionais, como ID do herói ou da missão:
-        if (xtipo == CHEGADA) 
-        {
-            printf("ID do Herói: %d, Base: %d\n", evento->dado1, evento->dado2);
-        } 
-        else if (xtipo == MISSAO) 
-        {
-            printf("ID da Missão: %d\n", evento->dado2);
-        } 
-        else if (xtipo == FIM) 
-        {
-            printf("Evento de término da simulação.\n");
-        } 
-        else 
-        {
-            printf("Outro tipo de evento.\n");
-        }
-    } 
-    else 
-        printf("Fila de prioridade vazia ou erro ao retirar evento.\n");
-
+        
+    if (m.tempo < T_FIM_DO_MUNDO)
+        m.eventos_tratados++;   
 
 
     while (evento->tempo <= T_FIM_DO_MUNDO)
     {
         m.tempo = evento->tempo;
-        printf("tempo do evento %d\n", evento->tempo);
 
         switch (evento->tipo) 
-        {
-            case CHEGADA:
+        {    
 
-                int decisao = chega(evento->tempo, m, evento->dado1, evento->dado2);
+            case CHEGADA:
+            //if (m.vetor_herois[evento->dado1].vida)
+            //{
+                int decisao = chega(m.tempo, m, evento->dado1, evento->dado2);
+                //  cria e insere evento espera
                 if (decisao == 1) 
                 {
                     novo_evento = cria_evento(m.tempo, ESPERA, evento->dado1, evento->dado2);
                     fprio_insere(m.simulacao, novo_evento, ESPERA, m.tempo);
                 } 
+                //  cria e insere evento desiste
                 else
                 {
                     novo_evento = cria_evento(m.tempo, DESISTE, evento->dado1, evento->dado2);
                     fprio_insere(m.simulacao, novo_evento, DESISTE, m.tempo);
                 }
-                break;
+            //  }
+                break;     
 
-
-
-
+/* ======================================================================================================================================= */
 
             case ESPERA:
-
                 espera(evento->tempo, m, evento->dado1, evento->dado2);
                 novo_evento = cria_evento(m.tempo, AVISA, evento->dado1, evento->dado2);
                 fprio_insere(m.simulacao, novo_evento, AVISA, m.tempo);
                 break;
 
-
-
-
-
-
+/* ======================================================================================================================================= */
 
             case DESISTE:
-
                 int destino = desiste(evento->tempo, &m, evento->dado1, evento->dado2);
                 novo_evento = cria_evento(m.tempo, VIAGEM, evento->dado1, destino);
                 fprio_insere(m.simulacao, novo_evento, VIAGEM, m.tempo);
                 break;
 
-
-
-
-
-
+/* ======================================================================================================================================= */
 
             case AVISA:
-
                 avisa(evento->tempo, m, evento->dado2);
                 int heroiRemovido;
                 while (m.vetor_bases[evento->dado2].lotacao > cjto_card(m.vetor_bases[evento->dado2].presentes) && fila_tamanho(m.vetor_bases[evento->dado2].espera) != 0) 
                 {
                     fila_retira(m.vetor_bases[evento->dado2].espera, &heroiRemovido);
-                    //destroi_evento()
-                    
                     printf("%6d: AVISA PORTEIRO BASE %d ADMITE %2d \n", evento->tempo, m.vetor_bases[evento->dado2].id_base, heroiRemovido);
                     cjto_insere(m.vetor_bases[evento->dado2].presentes, heroiRemovido);
                     novo_evento = cria_evento(m.tempo, ENTRADA, heroiRemovido, evento->dado2);
@@ -248,107 +168,77 @@ int main ()
                 }
                 break;
 
-
-
-
-
-
-
-
-
-
+/* ======================================================================================================================================= */
 
             case ENTRADA:
-
                 int tpb = entra(evento->tempo, &m, evento->dado1, evento->dado2);
                 novo_evento = cria_evento(m.tempo + tpb, SAIDA, evento->dado1, evento->dado2);
-                fprio_insere(m.simulacao, novo_evento, SAIDA, m.tempo + tpb);
+                fprio_insere(m.simulacao, novo_evento, SAIDA, m.tempo + tpb);  
                 break;
 
-
-
-
-
+/* ======================================================================================================================================= */
 
             case SAIDA:
-
-                int aux = evento->dado2;
+            if (m.vetor_herois[evento->dado1].vida)
+            {
+                int aux = evento->dado2;    
                 destino = sai(evento->tempo, &m, evento->dado1, evento->dado2);
                 novo_evento = cria_evento(m.tempo, VIAGEM, evento->dado1, destino);
-                fprio_insere(m.simulacao, novo_evento, VIAGEM, m.tempo);
-                
+                fprio_insere(m.simulacao, novo_evento, VIAGEM, m.tempo);  
+                                
                 novo_evento = cria_evento(m.tempo, AVISA, evento->dado1, aux);
-                fprio_insere(m.simulacao, novo_evento, AVISA, m.tempo);
+                fprio_insere(m.simulacao, novo_evento, AVISA, m.tempo);    
+            }    
                 break;
 
-
-
-
-
-
+/* ======================================================================================================================================= */
 
             case VIAGEM:
-
                 int duracao = viaja(evento->tempo, &m, evento->dado1, evento->dado2);
                 novo_evento = cria_evento(m.tempo + duracao, CHEGADA, evento->dado1, evento->dado2);
-                fprio_insere(m.simulacao, novo_evento, CHEGADA, m.tempo);
+                fprio_insere(m.simulacao, novo_evento, CHEGADA, m.tempo + duracao);
                 break;
 
-
-
-
-
+/* ======================================================================================================================================= */
 
             case MISSAO:
-                int missao_concluida = 0;
-                int missao_adiada = 0;
-
-                int concluida = missao(evento->tempo, evento->dado1, &m);
-                if (concluida == 1)
+                int resultado_missao = missao(evento->tempo, evento->dado1, &m);
+                if (resultado_missao == 0)
                 {
-                    missao_concluida++;
-                } 
-                else 
-                {
-                    missao_adiada++;
                     novo_evento = cria_evento(m.tempo + 24 * 60, MISSAO, evento->dado1, 0);
                     fprio_insere(m.simulacao, novo_evento, MISSAO, novo_evento->tempo);
-                }
+                }   
                 break;
 
-
-
-
-
-
+/* ======================================================================================================================================= */
 
             case MORRE:
 
-                morre(evento->tempo, &m, m.simulacao, evento->dado1, evento->dado2);
+                if (m.vetor_herois[evento->dado1].vida)
+                        morre(evento->tempo, &m, m.simulacao, evento->dado1, evento->dado2);
                 break;
 
-
-
-
-
-
+/* ======================================================================================================================================= */
 
             case FIM:
 
-                fim(evento->tempo, &m, missao_concluida, missao_adiada);
-                destroi_evento(evento); // return 0 bellow
+                fim(evento->tempo, &m);
+                destroi_evento(evento);
                 m.simulacao = fprio_destroi(m.simulacao); // menotti - destruir dentro do mundo
                 destroi_mundo(&m);
                 return 0;
         }
+
         destroi_evento(evento);
-
         evento = fprio_retira(m.simulacao, &xtipo, &xtempo);
-    }
+        
+        if (m.tempo < T_FIM_DO_MUNDO)
+            m.eventos_tratados++;
 
-    // caso 
-    m.simulacao = fprio_destroi(m.simulacao); // menotti - destruir dentro do mundo
+        }
+
+    m.simulacao = fprio_destroi(m.simulacao);
     destroi_mundo(&m);
-
+    
     return 0;
 }
