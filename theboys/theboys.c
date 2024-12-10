@@ -1,7 +1,7 @@
 /*
 
 --------- PROGRAMA PRINCIPAL - TRABALHO FINAL DE PROGRAMAÇÃO 1 ---------
--------- ALUNO: MARCUS SEBASTIÃO ADRIANO ROCHA NETO - 202407103 --------
+-------- ALUNO: MARCUS SEBASTIÃO ADRIANO ROCHA NETO - 20240710 --------
 ----------------- PROFESSOR DAVID MENOTTI GOMES ------------------------
 
 */
@@ -224,7 +224,7 @@ int main ()
 
                 fim(evento->tempo, &m);
                 destroi_evento(evento);
-                m.simulacao = fprio_destroi(m.simulacao); // menotti - destruir dentro do mundo
+                m.simulacao = fprio_destroi(m.simulacao);
                 destroi_mundo(&m);
                 return 0;
         }

@@ -517,10 +517,6 @@ int missao (int tempo, int indice_missao, struct mundo *mundo)
             base_localizada = distanciasBases[b].id_base;
             mundo->vetor_bases[base_localizada].missoes_realizadas++;
         }
-        else
-        {
-            
-        }
 
 
         printf("%6d: MISSAO %d BASE %d DIST %d HEROIS: ", tempo, mundo->vetor_missoes[indice_missao].id_missao, mundo->vetor_bases[distanciasBases[b].id_base].id_base, 
