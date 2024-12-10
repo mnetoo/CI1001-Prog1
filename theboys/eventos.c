@@ -50,8 +50,21 @@ int compara(const void *a, const void *b)
 {
     struct distancia_base *baseA = (struct distancia_base *)a;
     struct distancia_base *baseB = (struct distancia_base *)b;
-    if (baseA->distancia < baseB->distancia) return -1;
-    if (baseA->distancia > baseB->distancia) return 1;
+<<<<<<< Updated upstream
+    
+    if (baseA->distancia < baseB->distancia) 
+        return -1;
+    if (baseA->distancia > baseB->distancia) 
+        return 1;
+=======
+
+    if (baseA->distancia < baseB->distancia) 
+        return -1;
+
+    if (baseA->distancia > baseB->distancia) 
+        return 1;
+        
+>>>>>>> Stashed changes
     return 0;
 }
 
@@ -68,7 +81,6 @@ struct evento_t *cria_evento (int tempo, int tipo, int dado1, int dado2)
     {
         return NULL;
     }
-        
         
     e->tempo = tempo;
     e->tipo = tipo;

@@ -1,7 +1,11 @@
 /*
 
 --------- PROGRAMA PRINCIPAL - TRABALHO FINAL DE PROGRAMAÇÃO 1 ---------
+<<<<<<< Updated upstream
 -------- ALUNO: MARCUS SEBASTIÃO ADRIANO ROCHA NETO - 20240710 --------
+=======
+-------- ALUNO: MARCUS SEBASTIÃO ADRIANO ROCHA NETO - 20240710 ---------
+>>>>>>> Stashed changes
 ----------------- PROFESSOR DAVID MENOTTI GOMES ------------------------
 
 */
