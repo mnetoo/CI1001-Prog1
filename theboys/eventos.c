@@ -50,21 +50,13 @@ int compara(const void *a, const void *b)
 {
     struct distancia_base *baseA = (struct distancia_base *)a;
     struct distancia_base *baseB = (struct distancia_base *)b;
-<<<<<<< Updated upstream
+
+    if (baseA->distancia < baseB->distancia) 
+        return -1;
+
+    if (baseA->distancia > baseB->distancia) 
+        return 1;
     
-    if (baseA->distancia < baseB->distancia) 
-        return -1;
-    if (baseA->distancia > baseB->distancia) 
-        return 1;
-=======
-
-    if (baseA->distancia < baseB->distancia) 
-        return -1;
-
-    if (baseA->distancia > baseB->distancia) 
-        return 1;
-        
->>>>>>> Stashed changes
     return 0;
 }
 
