@@ -141,7 +141,7 @@ struct mundo cria_mundo()
     for (int i = 0; i < N_MISSOES; i++)
     {
         mundo.vetor_missoes[i].id_missao = i;
-        mundo.vetor_missoes[i].habilidade = cjto_aleat(aleat(6, 10), N_HABILIDADES);
+        mundo.vetor_missoes[i].habilidade = cjto_aleat(aleat(0, 10), N_HABILIDADES);
         mundo.vetor_missoes[i].perigo = aleat(0, 100);
         mundo.vetor_missoes[i].local_missaoX = aleat(0, N_TAMANHO_MUNDO - 1);
         mundo.vetor_missoes[i].local_missaoY = aleat(0, N_TAMANHO_MUNDO - 1);
@@ -527,7 +527,7 @@ int missao (int tempo, int indice_missao, struct mundo *mundo)
                                                             (int)distanciasBases[b].distancia);
         
         
-        //  IMPRIME OS HERÓIS PRESENTES NA BASE
+/*        //  IMPRIME OS HERÓIS PRESENTES NA BASE
         for (h = 0; h < N_HEROIS; h++) 
         {
             if (cjto_pertence(mundo->vetor_bases[distanciasBases[b].id_base].presentes, mundo->vetor_herois[h].id_heroi)) 
@@ -557,7 +557,7 @@ int missao (int tempo, int indice_missao, struct mundo *mundo)
         printf("%6d: MISSAO %d UNIAO HAB BASE %d: ", tempo, mundo->vetor_missoes[indice_missao].id_missao, distanciasBases[b].id_base);
                                                         cjto_imprime(cjto_habilidades_base);
         printf("\n");
-
+*/
 
         cjto_destroi(cjto_habilidades_base);
 
