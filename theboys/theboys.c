@@ -42,7 +42,7 @@
 
 int main ()
 {
-    srand(0);   
+    srand(100000);   
     struct mundo m = cria_mundo();
     struct evento_t *evento;
     struct evento_t *novo_evento;
